@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Firebase ID Token Tester</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 700px; margin: 2rem auto; }
+      input { padding: .5rem; margin: .25rem 0; width: 100%; }
+      button { padding: .6rem 1rem; margin-top: .5rem; }
+      pre { background: #f6f6f6; padding: 1rem; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>Firebase Auth → ID Token → Call /api/me</h1>
+    <p>Enter your Email/Password (the test user you created in Firebase Console):</p>
+    <input id="email" placeholder="demo@test.com" />
+    <input id="password" type="password" placeholder="Password123!" />
+    <button id="signin">Sign In & Show ID Token</button>
+
+    <h3>ID Token</h3>
+    <pre id="token"></pre>
+
+    <button id="callme" disabled>Call /api/me with Bearer token</button>
+    <h3>/api/me response</h3>
+    <pre id="me"></pre>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+      // TODO: replace with your Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBzEle0uO6vISBDtkZJHTqQzo7XZ_eJzOY",
+        authDomain: "frameratr-ef66a.firebaseapp.com",
+        projectId: "frameratr-ef66a",
+        appId: "1:75330860255:web:ea9bb308d01be1d3a2e56a"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      const emailEl = document.getElementById('email');
+      const passEl  = document.getElementById('password');
+      const tokenEl = document.getElementById('token');
+      const meEl    = document.getElementById('me');
+      const btn     = document.getElementById('signin');
+      const btnMe   = document.getElementById('callme');
+
+      let idToken = null;
+
+      btn.onclick = async () => {
+        tokenEl.textContent = "Signing in...";
+        try {
+          const { user } = await signInWithEmailAndPassword(auth, emailEl.value, passEl.value);
+          idToken = await user.getIdToken();       // <-- this is what we need
+          tokenEl.textContent = idToken;
+          btnMe.disabled = false;
+        } catch (e) {
+          tokenEl.textContent = "Error: " + e;
+        }
+      };
+
+      btnMe.onclick = async () => {
+        meEl.textContent = "Calling /api/me...";
+        try {
+          const res = await fetch("http://localhost:3000/api/me", {
+            headers: { Authorization: "Bearer " + idToken }
+          });
+          const json = await res.json();
+          meEl.textContent = JSON.stringify(json, null, 2);
+        } catch (e) {
+          meEl.textContent = "Error: " + e;
+        }
+      };
+    </script>
+  </body>
+</html>
