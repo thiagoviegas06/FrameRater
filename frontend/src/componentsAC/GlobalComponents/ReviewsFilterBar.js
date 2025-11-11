@@ -38,9 +38,10 @@ export default function ReviewsFilterBar({
             <FormControl
                 variant="standard"
                 sx={{
-                    minWidth: 140,
+
                     '& .MuiInputBase-root': {
                         border: 'none',
+                        px: 2,
                         padding: 0,
                         fontSize: '0.95rem',
                         fontWeight: 600,

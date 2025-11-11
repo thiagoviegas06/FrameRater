@@ -3,7 +3,7 @@ import { Box, Typography, TextField, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 
-export default function EditableProfileSummary({ initialText = '', onSave }) {
+export default function ProfileTextBox({ initialText = '', onSave }) {
     const MAX_CHARS = 120;
 
     const [text, setText] = useState(initialText);
