@@ -1,8 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../../Pages/landingpage.css';
 
 const Hero = () => {
-    return ( <div></div>
+    return ( <div className="hero-section">
+        <div className="hero-text">
+            <h1 className='title'>FRAMRATR</h1>
+            <p>Enjoy the Show</p>
+            <div className="get-started">
+                <Link to="./" className="gs-btn-secondary">
+                    Get Started
+                </Link>
+            </div>
+        </div>
+    </div>
     );
 };
 

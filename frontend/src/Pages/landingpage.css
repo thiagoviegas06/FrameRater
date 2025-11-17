@@ -1,3 +1,28 @@
+/* Hero */
+.hero-section {
+    background: url("../Components/Assets/hero-bg.jpg") no-repeat;
+    background-size: 100vw;
+    width: 100vw;
+    height: 100vh;
+}
+.hero-text {
+    display: block;
+    padding: 26vh 8vw;
+    font-size: 45px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.hero-section h1 {
+    margin-bottom: 37px;
+}
+.hero-section p {
+    margin-bottom: 33px;
+    font-size: 24px;
+}
+
+
 /* Discover Section */
 * {
     margin: 0;
