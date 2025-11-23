@@ -3,14 +3,14 @@ import { Box, Typography } from '@mui/material';
 import CommentIconBar from './CommentIconBar';
 
 export default function CommentCard({
-                                        movieTitle = 'Movie Title',
-                                        commentText = 'This is a comment.',
-                                        likes = 0,
-                                        replies = 0,
-                                        onViewClick,
-                                        onLikeClick,
-                                        onReplyClick,
-                                    }) {
+        movieTitle = 'Movie Title',
+        commentText = 'This is a comment.',
+        likes = 0,
+        replies = 0,
+        onViewClick,
+        onLikeClick,
+        onReplyClick,
+    } ) {
     return (
         <Box
             sx={{

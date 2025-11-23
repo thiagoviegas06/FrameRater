@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../Pages/landingpage.css';
+import '../../Pages/LandingPage.css';
 
 const Explore = () => {
     return (

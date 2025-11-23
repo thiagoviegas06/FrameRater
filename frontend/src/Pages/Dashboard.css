@@ -1,0 +1,502 @@
+/* Conversations Section */
+.conversations-section {
+    padding: 9rem 0;
+    background-color: #09090b;
+}
+
+.conversations-header {
+    margin-bottom: 3rem;
+}
+
+/* Carousel Container */
+.conversations-carousel {
+    position: relative;
+    max-width: 70rem;
+    margin: 0 auto;
+}
+
+/* Carousel Buttons - Inside Card */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f4f4f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(239, 68, 68, 0.9);
+    border-color: #ef4444;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.carousel-btn-prev {
+    left: 1.5rem;
+}
+
+.carousel-btn-next {
+    right: 1.5rem;
+}
+
+/* Conversation Card */
+.conversations-card {
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid #27272a;
+    animation: fadeIn 0.5s ease;
+    height: 35rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.card-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Card Content Overlay */
+.card-content-overlay {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+
+/* Text Container with Translucent Background */
+.card-content-overlay::before {
+    content: '';
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    z-index: -1;
+    padding: 2rem;
+    width: 50%;
+    height: 50%;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.user-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+}
+
+.username {
+    font-size: 0.875rem;
+    color: #d4d4d8;
+}
+
+.movie-title-review {
+    font-size: 24px;
+    margin: 0 24% 2% 0;
+}
+
+.comment-text {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #d4d4d8;
+    margin-bottom: 1.5rem;
+    max-width: 28rem;
+}
+
+/* Card Actions */
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #d4d4d8;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 0;
+}
+
+.action-btn:hover {
+    color: #ef4444;
+}
+
+.action-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.reply-btn {
+    padding: 0.5rem 1.5rem;
+    background-color: rgba(39, 39, 42, 0.9);
+    border: 1px solid #3f3f46;
+    border-radius: 0.375rem;
+    color: #f4f4f5;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: "Avenir Next", "Avenir", "Century Gothic", "Futura", "Montserrat", "Gotham", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.reply-btn:hover {
+    background-color: #ef4444;
+    border-color: #ef4444;
+}
+
+/* Carousel Dots */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.carousel-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: #3f3f46;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.carousel-dot:hover {
+    background-color: #52525b;
+    transform: scale(1.2);
+}
+
+.carousel-dot.active {
+    background-color: #ef4444;
+    width: 2rem;
+    border-radius: 0.25rem;
+}
+
+/* Animation */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .conversations-section {
+        padding: 3rem 0;
+    }
+
+    .conversations-card {
+        height: 28rem;
+    }
+
+    .card-content-overlay::before {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .card-content-overlay {
+        padding: 2rem;
+    }
+
+    .movie-title {
+        font-size: 1.5rem;
+    }
+
+    .comment-text {
+        font-size: 1rem;
+    }
+
+    .carousel-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .carousel-btn svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .carousel-btn-prev {
+        left: 0.5rem;
+    }
+
+    .carousel-btn-next {
+        right: 0.5rem;
+    }
+
+    .card-actions {
+        flex-wrap: wrap;
+    }
+
+    .reply-btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Card Components for all sections  */
+.movies-section {
+    padding: 3rem 0;
+}
+
+.movies-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #f4f4f5;
+}
+.poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.view-all-link {
+    color: #ef4444;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.view-all-link:hover {
+    color: #dc2626;
+}
+
+/* Movies Grid - Shared layout */
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Movie Card - Shared card component */
+.movie-card {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-8px);
+}
+
+.movie-poster {
+    aspect-ratio: 2/3;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.movie-card:hover .movie-poster {
+    box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.3), 0 10px 10px -5px rgba(239, 68, 68, 0.2);
+}
+
+.movie-card:hover .movie-poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid #ef4444;
+    border-radius: 0.5rem;
+}
+
+/* Gradient Backgrounds - Shared */
+.gradient-red {
+    background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+}
+
+.gradient-gray {
+    background: linear-gradient(135deg, #3f3f46 0%, #27272a 100%);
+}
+
+/* Film Icon - Shared */
+.film-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.gradient-red .film-icon {
+    color: #ef4444;
+}
+
+.gradient-gray .film-icon {
+    color: #71717a;
+}
+
+.movie-card:hover .film-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Movie Info - Shared */
+.movie-info {
+    text-align: left;
+}
+
+.movie-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #f4f4f5;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.movie-rating {
+    display: flex;
+    gap: 0.125rem;
+}
+
+.star {
+    font-size: 1rem;
+    color: #3f3f46;
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: #eab308;
+}
+
+.movie-card:hover .star.filled {
+    color: #fbbf24;
+}
+
+.movie-count {
+    font-size: 0.75rem;
+    color: #a1a1aa;
+    margin: 0;
+}
+
+/* Animation - Shared */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .movies-section {
+        padding: 2rem 0;
+    }
+
+    .movies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .film-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .movies-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .movies-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    .movies-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}

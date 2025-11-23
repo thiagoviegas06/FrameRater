@@ -125,11 +125,7 @@ body {
   color: white;
   max-width: 900px;
 }
-.poster-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+
 .gs-title {
   font-size: 36px;
   font-weight: 700;

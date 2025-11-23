@@ -8,13 +8,13 @@ import CloseButton from './xIcon';
 import ProfileIcon from './ProfileIcon';
 //TODO implement the comments highlighting
 export default function ProfileOverlay({
-                                           bannerText = 'Welcome to My Profile',
-                                           profileImage,
-                                           username = 'username',
-                                           profileSummary = 'This is a short profile summary...',
-                                           comments = [],
-                                           onClose,
-                                       }) {
+        bannerText = 'Welcome to My Profile',
+        profileImage,
+        username = 'username',
+        profileSummary = 'This is a short profile summary...',
+        comments = [],
+        onClose,
+    }) {
     return (
         <Box
             sx={{

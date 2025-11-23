@@ -7,16 +7,16 @@ import NoInteractLikeCommentDisplayBar from '../GlobalComponents/NoInteractLikeC
 import AddToListButton from '../GlobalComponents/AddToListIcon';
 
 export default function FilmCard({
-                                     title,
-                                     rating,
-                                     year,
-                                     imdbRating,
-                                     matchPercent,
-                                     fetchSummary,
-                                     likes = 0,
-                                     comments = 0,
-                                     onAddClick,
-                                 }) {
+    title,
+    rating,
+    year,
+    imdbRating,
+    matchPercent,
+    fetchSummary,
+    likes = 0,
+    comments = 0,
+    onAddClick,
+}) {
     const [summaryText, setSummaryText] = useState('');
 
     useEffect(() => {

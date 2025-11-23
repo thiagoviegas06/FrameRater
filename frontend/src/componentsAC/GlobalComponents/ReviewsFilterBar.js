@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Box, Typography, Select, MenuItem, FormControl } from '@mui/material';
 
 export default function ReviewsFilterBar({
-                                             filterOptions = ['New', 'Most Replies', 'Most Liked'],
-                                             onFilterChange,
-                                         }) {
+        filterOptions = ['New', 'Most Replies', 'Most Liked'],
+        onFilterChange,
+    }) {
     const [filter, setFilter] = useState(filterOptions[0]);
 
     const handleChange = (event) => {

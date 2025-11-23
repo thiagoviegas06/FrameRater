@@ -12,7 +12,16 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.app-shell {
+  min-height: 100vh;       /* fill viewport */
+  display: flex;
+  flex-direction: column;
+  background-color: #09090b; /* match site bg if you want */
+}
 
+.app-main {
+  flex: 1;                 /* take remaining space, pushes footer down */
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

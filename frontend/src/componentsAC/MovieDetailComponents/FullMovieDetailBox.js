@@ -11,15 +11,15 @@ import GlobalCommentCard from '../GlobalComponents/GlobalCommentCard';
 import CloseButton from '../GlobalComponents/overlayXit';
 
 export default function FilmDetailOverlay({
-                                              open = false,
-                                              bannerImage,
-                                              movieTitle = 'Movie Title',
-                                              summaryText = 'This is a summary of the movie...',
-                                              genreCastData = {},
-                                              userNotes = '',
-                                              comments = [],
-                                              onClose,
-                                          }) {
+        open = false,
+        bannerImage,
+        movieTitle = 'Movie Title',
+        summaryText = 'This is a summary of the movie...',
+        genreCastData = {},
+        userNotes = '',
+        comments = [],
+        onClose,
+    }) {
     const BANNER_HEIGHT = 240;
 
     return (
@@ -33,7 +33,7 @@ export default function FilmDetailOverlay({
                     mt: '40px', // top margin
                     bgcolor: 'rgba(20, 20, 20, 0.9)',
                     borderRadius: 3,
-                    overflowY: 'auto', // scrolls when content overflows
+                    overflowY: 'clip', // scrolls when content overflows
                     display: 'flex',
                     flexDirection: 'column',
                     boxShadow: '0 0 25px rgba(192,192,192,0.05)',

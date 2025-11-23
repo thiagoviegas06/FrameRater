@@ -1,35 +1,65 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import { AuthProvider } from "./context/AuthContext";
+// import ProtectedRoute from "./Components/ProtectedRoute";
 import Nav from './Components/Nav/nav';
-import LandingPage from './Pages/landingpage';
+import Footer from './Components/Footer/Footer';
+import LandingPage from './Pages/LandingPage';
+import Dashboard from './Pages/Dashboard';
+import Profile from './Pages/Profile';
+import Register from './Pages/Register';
+import Login from './Pages/Login';
+import ResetConfirmation from './componentsAC/SignInComponents/ResetConfirmation'
+import PasswordReset from './componentsAC/SignInComponents/PasswordReset'
+import Search from './Components/Search/Search';
+//import SignUpConfirmation from './componentsAC/SignInComponents/SignUpConfirmation'
+import MovieDetails from './Pages/MovieDetails'
+
 
 function App() {
-
-  // Login logic need to go here
   return (
-    <Router>
-        <Nav />
-      <Routes>
-        {/* Nav */}
+    // <AuthProvider>
+      <Router>
+        <div className="app-shell">
+          <Nav />
 
-        {/* Default route - Landing page if not logged in */}
-        {/* <Route
-          path="/"
-          element={!LoggedIn ? <LandingPage /> : <LoginForm />}
-        /> */}
+          {/* main content should expand to push footer down */}
+          <main className="app-main">
+            <Routes>
+              <Route path="/landingpage" element={<LandingPage />} />
+              <Route path="/resetconfirmation" element={<ResetConfirmation />} />
+              <Route path="/passwordreset" element={<PasswordReset />} />
+              <Route path="/search" element={<Search />} />
 
-        {/* Register
-        <Route path="/register" element={<Register />} />
+              {/* <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              /> */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/moviedetails" element={<MovieDetails />} />
+              <Route path="/profile" element={<Profile />} />
+              {/* <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              /> */}
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
 
-        {/* Landing Page */}
-        <Route path="/landingpage" element={<LandingPage />} />
+              <Route path="*" element={<Navigate to="/landingpage" replace />} />
+            </Routes>
+          </main>
 
-
-        {/* Protected route - for personal information: profile etc. */}
-
-        {/* Catch-all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+          <Footer />
+        </div>
+      </Router>
+    // {/* </AuthProvider> */}
   );
 }
 

@@ -2,12 +2,12 @@ import React from 'react';
 import Hero from '../Components/LandingPage/hero';
 import Explore from '../Components/LandingPage/explore';
 import GetStarted from '../Components/LandingPage/getStarted';
-import Trending from '../Components/LandingPage/trending';
-import Releases from '../Components/LandingPage/releases';
+import TrendingNow from '../Components/Dashboard/TrendingNow';
+import NewReleases from '../Components/Dashboard/NewReleases';
 import Community from '../Components/LandingPage/community';
 import Reviews from '../Components/LandingPage/reviews';
 import Cta from '../Components/LandingPage/cta';
-import './landingpage.css';
+import './LandingPage.css';
 
 // Login Form Component
 const LandingPage = () => {
@@ -16,8 +16,8 @@ const LandingPage = () => {
             <Hero />
             <Explore />
             <GetStarted />
-            <Trending />
-            <Releases />
+            <TrendingNow />
+            <NewReleases />
             <Community />
             <Reviews />
             <Cta />

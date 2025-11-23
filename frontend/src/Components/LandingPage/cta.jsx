@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../Pages/landingpage.css';
+import '../../Pages/LandingPage.css';
 
 const CTA = () => {
     return (

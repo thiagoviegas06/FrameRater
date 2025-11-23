@@ -1,9 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-* {
+html,
+body {
+  height: 100%;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.app-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #09090b;
+}
+
+/* Grows to push footer down */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
@@ -20,4 +41,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.primary-heading {
+  font-size: 36px;
+  font-style: bold;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../Pages/landingpage.css';
+import '../../Pages/LandingPage.css';
 
 const getStarted = () => {
     return (
@@ -14,7 +14,7 @@ const getStarted = () => {
                         FrameRatr’s adaptive engine learns your taste, one movie at a time.
                     </p>
                     <div className="gs-actions">
-                        <Link to="./" className="gs-btn-secondary">
+                        <Link to="./login" className="gs-btn-secondary">
                             Get Started
                         </Link>
                     </div>
