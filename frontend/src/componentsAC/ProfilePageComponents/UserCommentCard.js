@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import CommentIconBar from './CommentIconBar';
+import CommentIconBar from '../GlobalComponents/CommentIconBar';
 
 export default function CommentCard({
         movieTitle = 'Movie Title',

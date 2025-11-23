@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ProfileBanner from './ProfileBanner';
 import EditableProfileSummary from './EditableProfileSummary';
-import ReviewsBar from './ReviewsFilterBar';
+import ReviewsBar from '../GlobalComponents/ReviewsFilterBar';
 import CommentCard from './UserCommentCard';
-import CloseButton from './xIcon';
-import ProfileIcon from './ProfileIcon';
+import CloseButton from '../GlobalComponents/overlayXit';
+import ProfileIcon from '../GlobalComponents/ProfileIcon';
 //TODO implement the comments highlighting
 export default function ProfileOverlay({
         bannerText = 'Welcome to My Profile',
