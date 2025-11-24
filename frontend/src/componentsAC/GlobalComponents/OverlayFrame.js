@@ -43,7 +43,7 @@ export default function OverlayFrame({ open, onClose, children }) {
             >
                 <Box
                     onClick={stopPropagation} // Prevent clicks inside box from closing
-                    sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                    sx={{ width: '100%', display: 'flex', justifyContent: 'center', maxHeight: '100vh', overflowY: 'auto' }}
                 >
                     {children}
                 </Box>

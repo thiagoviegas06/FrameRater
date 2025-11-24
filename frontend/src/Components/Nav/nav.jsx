@@ -33,10 +33,8 @@ const Nav = () => {
         <nav className="nav">
             <div className="nav-container">
                 {/* LEFT: LOGO */}
-                <Link to="/home">
-                    <div className="nav-left">
-                        <img src={Logo} className="logo-img" alt="FrameRatr logo" />
-                    </div>
+                <Link to="/home" className="nav-left">
+                    <img src={Logo} className="logo-img" alt="FrameRatr logo" />
                 </Link>
 
                 {/* MIDDLE LINKS */}
@@ -74,8 +72,7 @@ const Nav = () => {
                         </svg>
                     </Link>
 
-                    {/* Profile + dropdown */}
-                    {/* Profile + dropdown */}
+                    {/* Profile Dropdown */}
                     <div
                         className="nav-profile"
                         onMouseEnter={() => setProfileOpen(true)}
@@ -86,25 +83,22 @@ const Nav = () => {
                         </svg>
 
                         <div className={`nav-profile-menu ${profileOpen ? "open" : ""}`}>
-                            {/* PROFILE opens overlay */}
-                            <button
-                                type="button"
-                                className="nav-profile-item"
-                                onClick={() => setProfileOverlayOpen(true)}
-                            >
-                                Profile
-                            </button>
+                            {authUser && (
+                                <button
+                                    type="button"
+                                    className="nav-profile-item"
+                                    onClick={() => setProfileOverlayOpen(true)}
+                                >
+                                    Profile
+                                </button>
+                            )}
 
-                            {/* LOGIN / LOGOUT */}
                             <button
                                 type="button"
                                 className={`nav-profile-item ${authUser ? "nav-profile-logout" : ""}`}
                                 onClick={() => {
-                                    if (authUser) {
-                                        handleLogout();  // logs out
-                                    } else {
-                                        setLoginOverlayOpen(true); // opens login overlay
-                                    }
+                                    if (authUser) handleLogout();
+                                    else setLoginOverlayOpen(true);
                                 }}
                             >
                                 {authUser ? "Logout" : "Login"}

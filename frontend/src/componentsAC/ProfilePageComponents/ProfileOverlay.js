@@ -1,20 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { getAuth } from 'firebase/auth';
 import ProfileBanner from './ProfileBanner';
 import EditableProfileSummary from './EditableProfileSummary';
 import ReviewsBar from '../GlobalComponents/ReviewsFilterBar';
 import CommentCard from './UserCommentCard';
 import CloseButton from '../GlobalComponents/overlayXit';
 import ProfileIcon from '../GlobalComponents/ProfileIcon';
-//TODO implement the comments highlighting
-export default function ProfileOverlay({
-        bannerText = 'Welcome to My Profile',
-        profileImage,
-        username = 'username',
-        profileSummary = 'This is a short profile summary...',
-        comments = [],
-        onClose,
-    }) {
+
+export default function ProfileOverlay({ onClose }) {
+    const [userData, setUserData] = useState({
+        username: '',
+        profileImage: '',
+        profileSummary: '',
+        comments: [],
+    });
+
+    useEffect(() => {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (user) {
+            setUserData({
+                username: user.displayName || '',
+                profileImage: user.photoURL || '',
+                profileSummary: '', // placeholder, can fetch from Firestore if desired
+                comments: [],       // placeholder, can fetch from Firestore if desired
+            });
+        } else {
+            // User not logged in
+            setUserData({
+                username: '',
+                profileImage: '',
+                profileSummary: '',
+                comments: [],
+            });
+        }
+    }, []);
+
+    const { username, profileImage, profileSummary, comments } = userData;
+
     return (
         <Box
             sx={{
@@ -30,11 +55,11 @@ export default function ProfileOverlay({
                 display: 'flex',
                 flexDirection: 'column',
                 boxShadow: '0 0 25px rgba(192,192,192,0.05)',
-                zIndex: 1200, // ensures it's always above OverlayFrame
+                zIndex: 1200,
                 backdropFilter: 'blur(8px)',
             }}
         >
-            {/* Close button top-right */}
+            {/* Close button */}
             <Box sx={{ position: 'absolute', top: 8, right: 8, zIndex: 20 }}>
                 <CloseButton onClick={onClose} />
             </Box>
@@ -42,33 +67,16 @@ export default function ProfileOverlay({
             {/* Top banner */}
             <Box sx={{ width: '100%' }}>
                 <ProfileBanner
-                    initialText={bannerText}
+                    initialText={`Welcome${username ? `, ${username}` : ''}`}
                     onSave={(text, pos) => console.log('Banner saved', text, pos)}
                 />
             </Box>
 
-            {/* Profile photo and username */}
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    mt: '-50px',
-                    zIndex: 10,
-                    px: 3,
-                }}
-            >
+            {/* Profile photo & username */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: '-50px', zIndex: 10, px: 3 }}>
                 <ProfileIcon src={profileImage} size={100} editable />
-                <Typography
-                    sx={{
-                        color: 'silver',
-                        fontWeight: 600,
-                        fontSize: '1rem',
-                        mt: 1,
-                        textShadow: '0 0 5px rgba(255,255,255,0.15)',
-                    }}
-                >
-                    @{username}
+                <Typography sx={{ color: 'silver', fontWeight: 600, fontSize: '1rem', mt: 1, textShadow: '0 0 5px rgba(255,255,255,0.15)' }}>
+                    {username ? `@${username}` : '@'}
                 </Typography>
             </Box>
 
@@ -82,9 +90,7 @@ export default function ProfileOverlay({
 
             {/* Reviews bar */}
             <Box sx={{ mt: 2, px: 3 }}>
-                <ReviewsBar
-                    onFilterChange={(filter) => console.log('Filter selected', filter)}
-                />
+                <ReviewsBar onFilterChange={(filter) => console.log('Filter selected', filter)} />
             </Box>
 
             {/* Comments section */}
@@ -94,27 +100,14 @@ export default function ProfileOverlay({
                     mt: 1,
                     px: 3,
                     overflowY: 'auto',
-                    '&::-webkit-scrollbar': {
-                        width: '6px',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                        bgcolor: '#555',
-                        borderRadius: 3,
-                    },
+                    '&::-webkit-scrollbar': { width: '6px' },
+                    '&::-webkit-scrollbar-thumb': { bgcolor: '#555', borderRadius: 3 },
                 }}
             >
                 {comments.length > 0 ? (
                     comments.map((c, idx) => (
                         <Box key={idx} sx={{ mb: 2 }}>
-                            <CommentCard
-                                movieTitle={c.movieTitle}
-                                commentText={c.commentText}
-                                likes={c.likes}
-                                replies={c.replies}
-                                onViewClick={() => console.log('View clicked', c)}
-                                onLikeClick={() => console.log('Like clicked', c)}
-                                onReplyClick={() => console.log('Reply clicked', c)}
-                            />
+                            <CommentCard {...c} />
                         </Box>
                     ))
                 ) : (

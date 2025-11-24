@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import FilmDetailOverlay from './FullMovieDetailBox';
+import FilmDetailOverlay from './FilmDetailOverlay';
 
 export default function TestOverlay() {
     const [open, setOpen] = useState(true);
