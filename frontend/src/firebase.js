@@ -1,6 +1,7 @@
+// firebase.js
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
-
+import { getFirestore } from "firebase/firestore"; // <-- add this
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -12,11 +13,9 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-// Debugging: log config to verify env variables are loaded
 console.log("Firebase Config:", firebaseConfig);
-
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-// Export auth instance
 export const auth = getAuth(app);
+export const db = getFirestore(app); // <-- export Firestore

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Nav.css";
 import Logo from "../Assets/FrameRatrlogo.png";
 import { signOut, onAuthStateChanged } from "firebase/auth";
@@ -7,11 +7,10 @@ import { auth } from "../../firebase";
 import { useOverlay } from "../../context/OverlayProvider";
 
 const Nav = () => {
-    const navigate = useNavigate();
-    const [profileOpen, setProfileOpen] = useState(false); // menu hover
+    const [profileOpen, setProfileOpen] = useState(false);
     const [authUser, setAuthUser] = useState(null);
 
-    const { setProfileOverlayOpen } = useOverlay();
+    const { setProfileOverlayOpen, setLoginOverlayOpen } = useOverlay();
 
     // Watch Firebase auth state
     useEffect(() => {
@@ -24,7 +23,7 @@ const Nav = () => {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            navigate("/login");
+            setProfileOverlayOpen(false); // close profile overlay on logout
         } catch (err) {
             console.error("Error logging out:", err);
         }
@@ -76,6 +75,7 @@ const Nav = () => {
                     </Link>
 
                     {/* Profile + dropdown */}
+                    {/* Profile + dropdown */}
                     <div
                         className="nav-profile"
                         onMouseEnter={() => setProfileOpen(true)}
@@ -86,7 +86,7 @@ const Nav = () => {
                         </svg>
 
                         <div className={`nav-profile-menu ${profileOpen ? "open" : ""}`}>
-                            {/* Open overlay instead of navigating */}
+                            {/* PROFILE opens overlay */}
                             <button
                                 type="button"
                                 className="nav-profile-item"
@@ -95,20 +95,20 @@ const Nav = () => {
                                 Profile
                             </button>
 
-                            {/* Second item: Login OR Logout */}
-                            {authUser ? (
-                                <button
-                                    type="button"
-                                    className="nav-profile-item nav-profile-logout"
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </button>
-                            ) : (
-                                <Link to="/login" className="nav-profile-item">
-                                    Login
-                                </Link>
-                            )}
+                            {/* LOGIN / LOGOUT */}
+                            <button
+                                type="button"
+                                className={`nav-profile-item ${authUser ? "nav-profile-logout" : ""}`}
+                                onClick={() => {
+                                    if (authUser) {
+                                        handleLogout();  // logs out
+                                    } else {
+                                        setLoginOverlayOpen(true); // opens login overlay
+                                    }
+                                }}
+                            >
+                                {authUser ? "Logout" : "Login"}
+                            </button>
                         </div>
                     </div>
                 </div>

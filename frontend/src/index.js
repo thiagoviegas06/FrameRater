@@ -8,7 +8,7 @@ import { OverlayProvider } from './context/OverlayProvider';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <OverlayProvider> {/* ← wrap App here */}
+        <OverlayProvider>
             <App />
         </OverlayProvider>
     </React.StrictMode>

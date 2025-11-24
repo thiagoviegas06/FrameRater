@@ -1,29 +1,32 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
-// Create context just for OverlayFrame-based overlays
 const OverlayContext = createContext();
 
-export function OverlayProvider({ children }) {
-    // Add overlay states here for any OverlayFrame modal
+export const useOverlay = () => useContext(OverlayContext);
+
+export const OverlayProvider = ({ children }) => {
+    const [loginOverlayOpen, setLoginOverlayOpen] = useState(false);
+    const [createAccountOverlayOpen, setCreateAccountOverlayOpen] = useState(false);
+    const [passwordResetOverlayOpen, setPasswordResetOverlayOpen] = useState(false);
+    const [resetConfirmationOverlayOpen, setResetConfirmationOverlayOpen] = useState(false);
     const [profileOverlayOpen, setProfileOverlayOpen] = useState(false);
-    const [settingsOverlayOpen, setSettingsOverlayOpen] = useState(false);
-    // You can add more as needed
 
     return (
         <OverlayContext.Provider
             value={{
+                loginOverlayOpen,
+                setLoginOverlayOpen,
+                createAccountOverlayOpen,
+                setCreateAccountOverlayOpen,
+                passwordResetOverlayOpen,
+                setPasswordResetOverlayOpen,
+                resetConfirmationOverlayOpen,
+                setResetConfirmationOverlayOpen,
                 profileOverlayOpen,
                 setProfileOverlayOpen,
-                settingsOverlayOpen,
-                setSettingsOverlayOpen,
             }}
         >
             {children}
         </OverlayContext.Provider>
     );
-}
-
-// Hook to use overlay state
-export function useOverlay() {
-    return useContext(OverlayContext);
-}
+};

@@ -1,189 +1,138 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase"; // adjust path if needed
-import {
-  Link,
-  Box,
-  Card,
-  CardContent,
-  TextField,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Box, Card, CardContent, TextField, Typography, Button } from "@mui/material";
+import { useOverlay } from "../../context/OverlayProvider";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function SignInCard() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+    const {
+        loginOverlayOpen,
+        setLoginOverlayOpen,
+        setCreateAccountOverlayOpen,
+        setPasswordResetOverlayOpen
+    } = useOverlay();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+    const navigate = useNavigate();
 
-    try {
-      // Firebase sign-in
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      // Optional: get ID token here if you want
-      // const token = await userCred.user.getIdToken();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-      // go to dashboard after login
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
 
-  return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backdropFilter: 'blur(6px)',
-      }}
-    >
-      <Card
-        sx={{
-          width: { xs: '90%', sm: 400 },
-          background: 'linear-gradient(135deg, #8b0000 0%, #000000 80%)',
-          borderRadius: 3,
-          boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
-        }}
-      >
-        <CardContent
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            p: 4,
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              color: 'white',
-              textAlign: 'center',
-              fontWeight: 600,
-              mb: 1,
-            }}
-          >
-            Sign In
-          </Typography>
+        const auth = getAuth();
 
-          <form onSubmit={handleSubmit}>
-            {/* Email */}
-            <TextField
-              label="Email"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log("Logged in user:", userCredential.user);
 
-            {/* Password */}
-            <TextField
-              label="Password"
-              type="password"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            setLoginOverlayOpen(false);
+            navigate("/dashboard"); // or wherever you want after login
+        } catch (err) {
+            console.error("Login error:", err);
+            setError(err.message || "Login failed");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            {error && (
-              <Typography
-                variant="body2"
-                sx={{ color: "#ffb3b3", mt: 1 }}
-              >
-                {error}
-              </Typography>
-            )}
+    const textFieldSx = {
+        '& .MuiOutlinedInput-root': {
+            color: 'rgba(255,255,255,0.9)',
+            fontWeight: 700,
+            fontSize: '0.875rem',
+            boxShadow: 'inset 0 0 6px rgba(255,255,255,0.2)',
+            '& fieldset': { borderColor: 'rgba(255,255,255,0.5)' },
+            '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.8)', borderWidth: 2 },
+            '&.Mui-focused fieldset': { borderColor: 'rgba(255,255,255,1)', borderWidth: 2 },
+        },
+        '& input': { color: 'rgba(255,255,255,0.9)', fontWeight: 700, fontSize: '0.875rem' },
+        '& label': { color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem' },
+        mb: 2,
+    };
 
-            <Box sx={{ textAlign: "left", mt: 1 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: "11pt",
-                  color: "rgba(255,255,255,0.85)",
-                  fontFamily: '"Poppins", sans-serif',
-                }}
-              >
-                Forgot Password?{" "}
-                <Link
-                  href="/passwordreset"
-                  underline="hover"
-                  sx={{
-                    color: "rgba(255,255,255,0.7)",
-                    fontWeight: 600,
-                    "&:hover": { color: 'rgba(255,255,255,0.9)' },
-                  }}
-                >
-                  Reset
-                </Link>
-              </Typography>
-            </Box>
+    return (
+        <Card sx={{
+            width: { xs: '90%', sm: 400 },
+            background: 'linear-gradient(135deg, #8b0000 0%, #000000 80%)',
+            borderRadius: 3,
+            boxShadow: '0 8px 20px rgba(0,0,0,0.5)'
+        }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 4 }}>
+                <Typography variant="h5" sx={{ color: 'white', textAlign: 'center', fontWeight: 600 }}>
+                    Sign In
+                </Typography>
 
-            <Button
-              fullWidth
-              type="submit"
-              variant="contained"
-              disabled={loading}
-              sx={{
-                mt: 2,
-                py: 1.2,
-                backgroundColor: '#8b0000',
-                color: 'white',
-                fontWeight: 600,
-                textTransform: 'none',
-                borderRadius: 2,
-                boxShadow: '0 0 12px rgba(139,0,0,0.3)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  backgroundColor: '#a40000',
-                  boxShadow: '0 0 18px rgba(139,0,0,0.5)',
-                  transform: 'translateY(-1px)',
-                },
-              }}
-            >
-              {loading ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        label="Email"
+                        fullWidth
+                        variant="outlined"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        sx={textFieldSx}
+                    />
+                    <TextField
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        variant="outlined"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        sx={textFieldSx}
+                    />
 
-          <Box sx={{ textAlign: "left", mt: 1 }}>
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: "11pt",
-                color: "rgba(255,255,255,0.85)",
-                fontFamily: '"Poppins", sans-serif',
-              }}
-            >
-              Need an account?{" "}
-              <Link
-                href="/register"
-                underline="hover"
-                sx={{
-                  color: "rgba(255,255,255,0.7)",
-                  fontWeight: 600,
-                  "&:hover": { color: 'rgba(255,255,255,0.9)' },
-                }}
-              >
-                Sign up
-              </Link>
-            </Typography>
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
-  );
+                    {error && <Typography variant="body2" sx={{ color: "#ffb3b3", mt: 1 }}>{error}</Typography>}
+
+                    <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        disabled={loading}
+                        sx={{
+                            mt: 2, py: 1.2,
+                            backgroundColor: '#8b0000',
+                            color: 'white',
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            boxShadow: '0 0 12px rgba(139,0,0,0.3)',
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                backgroundColor: '#a40000',
+                                boxShadow: '0 0 18px rgba(139,0,0,0.5)',
+                                transform: 'translateY(-1px)'
+                            },
+                        }}
+                    >
+                        {loading ? "Signing in..." : "Sign In"}
+                    </Button>
+                </form>
+
+                <Typography sx={{ textAlign: 'center', mt: 2, fontSize: '11pt', color: 'rgba(255,255,255,0.85)' }}>
+                    Need an account?{" "}
+                    <span
+                        onClick={() => { setLoginOverlayOpen(false); setCreateAccountOverlayOpen(true); }}
+                        style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600, cursor: 'pointer' }}
+                    >
+                        Sign up
+                    </span>
+                </Typography>
+
+                <Typography sx={{ textAlign: 'center', mt: 1, fontSize: '11pt', color: 'rgba(255,255,255,0.85)' }}>
+                    Forgot password?{" "}
+                    <span
+                        onClick={() => { setLoginOverlayOpen(false); setPasswordResetOverlayOpen(true); }}
+                        style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600, cursor: 'pointer' }}
+                    >
+                        Reset
+                    </span>
+                </Typography>
+            </CardContent>
+        </Card>
+    );
 }
