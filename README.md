@@ -14,11 +14,39 @@
 ## Quick Start
 ```bash
 # 1. Clone
-git clone https://github.com/your-username/FrameRatr.git
+git clone <your-repo-url>
 cd FrameRatr
 
-# 2. Set up secrets (AWS)
+
+## Frontend
+
+- If you have Node.js installed, run the following commands from the project root to install all required packages for the frontend React.js server.
+
+
+$ cd frontend
+$ npm install
+$ npm install firebase
+
+- Once JavaScript package installation is complete, start the frontend server using this command
+
+$ npm run start
+
+The React development server will start running at http://localhost:3000.
+
+For Icons
+$ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+
+
+# Set up backend
 cd backend
+
+# Run environment
+python -m venv .venv
+.\.venv\Scripts\activate
+# Install requirements
+pip install -r requirements.txt
+
+# Set up secrets (AWS)
 python setup_secrets.py
 
 # 3. Start services
@@ -40,4 +68,4 @@ docker compose up --build
 
 ## Team
 
-Built by FrameRatr 
+Built by FrameRatr
