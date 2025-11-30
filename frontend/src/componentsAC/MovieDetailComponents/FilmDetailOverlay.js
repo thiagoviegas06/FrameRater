@@ -1,4 +1,3 @@
-// ./componentsAC/MovieDetailComponents/FilmDetailOverlay.jsx
 import React from 'react';
 import { Box } from '@mui/material';
 import OverlayFrame from '../GlobalComponents/OverlayFrame';
@@ -23,7 +22,7 @@ export default function FilmDetailOverlay({
     const BANNER_HEIGHT = 240;
 
     return (
-        <OverlayFrame open={open} onClose={onClose}>
+        <OverlayFrame open={open} onClose={onClose} showCloseButton={false}>
             <Box
                 sx={{
                     position: 'relative',
@@ -37,10 +36,10 @@ export default function FilmDetailOverlay({
                     boxShadow: '0 0 25px rgba(192,192,192,0.05)',
                     zIndex: 1200,
                     backdropFilter: 'blur(8px)',
-                    overflow: 'hidden', // clip outer edges, inner scroll will work
+                    overflow: 'hidden',
                 }}
             >
-                {/* Close button */}
+                {/* Hardcoded Close button */}
                 <Box sx={{ position: 'absolute', top: 8, right: 8, zIndex: 20 }}>
                     <CloseButton onClick={onClose} />
                 </Box>
@@ -72,14 +71,13 @@ export default function FilmDetailOverlay({
                 {/* Scrollable content */}
                 <Box
                     sx={{
-                        overflowY: 'auto', // ⚡ internal scroll
+                        overflowY: 'auto',
                         flexGrow: 1,
                         px: 3,
                         mt: 2,
                         pb: 2,
                     }}
                 >
-                    {/* Summary / Genre / Cast */}
                     <SummaryGenreCastCard data={genreCastData} />
 
                     {/* Notes */}

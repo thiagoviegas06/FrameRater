@@ -1,7 +1,8 @@
+// componentsAC/GlobalComponents/OverlayFrame.jsx
 import React, { useEffect, useState } from 'react';
-import { Box, Fade } from '@mui/material';
+import { Box, Fade, Button } from '@mui/material';
 
-export default function OverlayFrame({ open, onClose, children }) {
+export default function OverlayFrame({ open, onClose, children, showCloseButton = true }) {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -12,43 +13,57 @@ export default function OverlayFrame({ open, onClose, children }) {
         if (onClose) onClose();
     };
 
-    const stopPropagation = (e) => e.stopPropagation();
-
     return (
         <Fade in={show} timeout={500} unmountOnExit>
             <Box
-                onClick={handleOuterClick} // Close overlay when clicking outside inner box
+                onClick={handleOuterClick}
                 sx={{
                     position: 'fixed',
                     top: 0,
                     left: 0,
                     width: '100vw',
                     height: '100vh',
-                    background: `
-                        radial-gradient(
-                            circle at center,
-                            rgba(255, 255, 255, 0.03) 0%,
-                            rgba(25, 25, 25, 0.5) 30%,
-                            rgba(0, 0, 0, 0.9) 100%
-                        )
-                    `,
                     display: 'flex',
                     justifyContent: 'center',
-                    alignItems: 'center', // vertically center
+                    alignItems: 'center',
+                    background: 'rgba(0,0,0,0.6)',
                     zIndex: 1000,
                     overflowY: 'auto',
-                    backdropFilter: 'blur(5px) brightness(0.8)',
-                    transition: 'background 1s ease',
                 }}
             >
                 <Box
-                    onClick={stopPropagation} // Prevent clicks inside box from closing
-                    sx={{ width: '100%', display: 'flex', justifyContent: 'center', maxHeight: '100vh', overflowY: 'auto' }}
+                    onClick={(e) => e.stopPropagation()} // stop clicks inside from closing
+                    sx={{
+                        position: 'relative', // relative container for X
+                        width: { xs: '90%', sm: 400 },
+                        maxHeight: '90vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                    }}
                 >
+                    {/* X Button inside card (conditionally rendered) */}
+                    {showCloseButton && (
+                        <Button
+                            onClick={onClose}
+                            sx={{
+                                position: 'absolute',
+                                top: 1,      // vertical padding from top
+                                right: 12,  // horizontal padding from right
+                                minWidth: 0,
+                                padding: '4px', // extra padding around the X for easier clicking
+                                color: 'white',
+                                fontSize: '1.75rem', // slightly larger X
+                                zIndex: 10,
+                            }}
+                        >
+                            ×
+                        </Button>
+                    )}
+
                     {children}
                 </Box>
             </Box>
         </Fade>
     );
 }
-

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase"; // adjust path if needed
 import { Box, Card, CardContent, TextField, Typography, Button } from "@mui/material";
-import OverlayFrame from "../GlobalComponents/OverlayFrame"; // make sure path is correct
+import OverlayFrame from "../GlobalComponents/OverlayFrame";
 import { useOverlay } from "../../context/OverlayProvider";
 
 export default function SignInOverlay() {

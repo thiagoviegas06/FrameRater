@@ -1,13 +1,15 @@
+//deprecated delete later
+
 import React, { useState } from "react";
 import { Box, Card, CardContent, TextField, Typography, Button } from "@mui/material";
-import OverlayFrame from "../GlobalComponents/OverlayFrame"; // adjust path
+import OverlayFrame from "../GlobalComponents/OverlayFrame";
 import { useOverlay } from "../../context/OverlayProvider";
-
-// Optional: Firebase import if needed
-// import { getAuth, confirmPasswordReset } from "firebase/auth";
-
 export default function PasswordResetOverlay({ useFirebase = false }) {
-    const { passwordResetOverlayOpen, setPasswordResetOverlayOpen, setSignInOverlayOpen } = useOverlay();
+    const {
+        passwordResetOverlayOpen,
+        setPasswordResetOverlayOpen,
+        setLoginOverlayOpen
+    } = useOverlay();
 
     const [resetCode, setResetCode] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -34,11 +36,13 @@ export default function PasswordResetOverlay({ useFirebase = false }) {
                 // await confirmPasswordReset(auth, resetCode, newPassword);
             }
             setSuccess("Password reset successfully! You can now sign in.");
-            // Close overlay and open sign-in
+
+            // Close overlay and open Sign In
             setTimeout(() => {
                 setPasswordResetOverlayOpen(false);
-                setSignInOverlayOpen(true);
+                setLoginOverlayOpen(true); // Correct function from overlay context
             }, 1500);
+
         } catch (err) {
             console.error(err);
             setError(err?.message || "Failed to reset password");
@@ -95,7 +99,7 @@ export default function PasswordResetOverlay({ useFirebase = false }) {
 
                     <Typography sx={{ textAlign: 'center', mt: 2, fontSize: '11pt', color: 'rgba(255,255,255,0.85)', fontFamily: '"Poppins", sans-serif' }}>
                         Need an account?{" "}
-                        <span onClick={() => { setPasswordResetOverlayOpen(false); setSignInOverlayOpen(true); }} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600, cursor: 'pointer' }}>
+                        <span onClick={() => { setPasswordResetOverlayOpen(false); setLoginOverlayOpen(true); }} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600, cursor: 'pointer' }}>
                             Sign in
                         </span>
                     </Typography>

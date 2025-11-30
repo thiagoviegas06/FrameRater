@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import '../../Pages/LandingPage.css';
+import { useOverlay } from '../../context/OverlayProvider';
 
 const CTA = () => {
+    const { setCreateAccountOverlayOpen } = useOverlay();
+
     return (
         <div className='wrapper cta-wrapper'>
             <div className="cta-container">
@@ -14,9 +16,13 @@ const CTA = () => {
                         No fees or obligations
                     </p>
                     <div className="cta-actions">
-                        <Link to="./" className="cta-btn-secondary">
+                        <button
+                            type="button"
+                            className="cta-btn-secondary"
+                            onClick={() => setCreateAccountOverlayOpen(true)}
+                        >
                             Create Your Account
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
