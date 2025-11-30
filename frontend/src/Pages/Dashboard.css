@@ -498,5 +498,9 @@
 @media (min-width: 1025px) {
     .movies-grid {
         grid-template-columns: repeat(6, 1fr);
+        margin: 0 6%;
+    }
+    .community-grid {
+        margin: 0 -6%;
     }
 }

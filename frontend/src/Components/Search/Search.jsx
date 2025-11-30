@@ -22,7 +22,7 @@ const Search = () => {
 
     try {
       const data = await fetchPublic(
-        `/api/tmdb/search/multi?q=${encodeURIComponent(query.trim())}`
+        `/api/tmdb/search/multi?q=query${encodeURIComponent(query.trim())}`
       );
       setResults(data.results || []);
     } catch (err) {

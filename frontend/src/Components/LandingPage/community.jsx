@@ -1,70 +1,58 @@
-import React from 'react';
-import '../../Pages/LandingPage.css';
+import React, { useEffect, useState } from "react";
+import { API_BASE } from "../../api/config";
+import MovieCard from "../MovieCard/MovieCard";
+import "../../Pages/LandingPage.css";
+
 const Community = () => {
-    return (
-        // Community
-        <section className="trending-section">
-            <div className="container">
-                <div className="trending-header fade-in-up">
-                    <h2 className="section-title">Community Spotlight</h2>
-                    <a href="#" className="view-all-link">View All →</a>
-                </div>
+  const [shows, setShows] = useState([]);
 
-                <div className="movies-grid">
-                    {/* Movie card */}
-                    <div className="movie-card fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        <div className="movie-poster gradient-dark">
-                            <svg className="movie-icon icon-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <rect x="2" y="3" width="20" height="18" rx="2" strokeWidth="2"/>
-                                <path d="M7 3v18M17 3v18M2 9h20M2 15h20" strokeWidth="2"/>
-                            </svg>
-                        </div>
-                        <div className="movie-info">
-                            <h3 className="movie-title">The Dark Knight</h3>
-                            <div className="movie-rating">
-                                <span className="stars">★★★★★</span>
-                                <span className="rating-number">9.0</span>
-                            </div>
-                        </div>
-                    </div>
+  useEffect(() => {
+    // Get top trending TV
+    fetch(`${API_BASE}/api/tmdb/trending/movies`)
+      .then((res) => res.json())
+      .then((data) => {
+        const results = data.results || [];
+        setShows(results.slice(0, 6)); // Only top 6
+      })
+      .catch((err) =>
+        console.error("Error fetching Community Spotlight TV:", err)
+      );
+  }, []);
 
-                    {/* Card 2 */}
-                    <div className="movie-card fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <div className="movie-poster gradient-dark">
-                            <svg className="movie-icon icon-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <rect x="2" y="3" width="20" height="18" rx="2" strokeWidth="2"/>
-                                <path d="M7 3v18M17 3v18M2 9h20M2 15h20" strokeWidth="2"/>
-                            </svg>
-                        </div>
-                        <div className="movie-info">
-                            <h3 className="movie-title">Inception</h3>
-                            <div className="movie-rating">
-                                <span className="stars">★★★★★</span>
-                                <span className="rating-number">8.8</span>
-                            </div>
-                        </div>
-                    </div>
+  return (
+    <section className="trending-section">
+      <div className="container">
 
-                    {/* Card 3 */}
-                    <div className="movie-card fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <div className="movie-poster gradient-dark">
-                            <svg className="movie-icon icon-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <rect x="2" y="3" width="20" height="18" rx="2" strokeWidth="2"/>
-                                <path d="M7 3v18M17 3v18M2 9h20M2 15h20" strokeWidth="2"/>
-                            </svg>
-                        </div>
-                        <div className="movie-info">
-                            <h3 className="movie-title">Pulp Fiction</h3>
-                            <div className="movie-rating">
-                                <span className="stars">★★★★★</span>
-                                <span className="rating-number">8.9</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+        <div className="trending-header fade-in-up">
+          <h2 className="section-title">Community Spotlight</h2>
+          <a href="/community-lists" className="view-all-link">
+            View All →
+          </a>
+        </div>
+
+        <div className="movies-grid community-grid">
+          {shows.map((show, index) => (
+            <MovieCard
+              key={show.id}
+              title={show.name || show.original_name}
+              posterUrl={
+                show.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
+                  : null
+              }
+              rating={Math.round((show.vote_average || 0) / 2)}
+              gradient={index % 2 === 0 ? "gradient-red" : "gradient-gray"}
+              delay={index * 0.05}
+              onClick={() =>
+                console.log("Clicked Community Spotlight show:", show.name)
+              }
+            />
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
 };
 
 export default Community;

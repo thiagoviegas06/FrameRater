@@ -1,72 +1,87 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { API_BASE } from "../../api/config";
+import MovieCard from "../MovieCard/MovieCard";
 import "../../Pages/Dashboard.css";
-import FilmDetailOverlay from "../../componentsAC/MovieDetailComponents/FilmDetailOverlay";
 
-const newReleasesData = [
-    { id: 1, title: "Dune: Part Two", rating: 5, gradient: "gradient-red" },
-    { id: 2, title: "Poor Things", rating: 4, gradient: "gradient-gray" },
-    { id: 3, title: "The Zone of Interest", rating: 5, gradient: "gradient-red" },
-    { id: 4, title: "Killers of the Flower Moon", rating: 5, gradient: "gradient-red" },
-    { id: 5, title: "Oppenheimer", rating: 5, gradient: "gradient-red" },
-    { id: 6, title: "The Holdovers", rating: 4, gradient: "gradient-gray" }
-];
+const VISIBLE_COUNT = 6;
 
 const NewReleases = () => {
-    const [selectedMovie, setSelectedMovie] = useState(null);
+  const [movies, setMovies] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
 
-    return (
-        <div className="container">
-            {/* New Releases Section */}
-            <section className="movies-section">
-                <div className="movies-header fade-in-up">
-                    <h2 className="section-title">New Releases</h2>
-                    <a href="/new-releases" className="view-all-link">View All →</a>
-                </div>
-                <div className="movies-grid">
-                    {newReleasesData.map((movie, index) => (
-                        <div
-                            className="movie-card fade-in-up"
-                            key={movie.id}
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                            onClick={() => setSelectedMovie(movie)} // Make card clickable
-                        >
-                            <div className={`movie-poster ${movie.gradient}`}>
-                                <svg className="film-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <rect x="2" y="3" width="20" height="18" rx="2" strokeWidth="2"/>
-                                    <path d="M7 3v18M17 3v18M2 9h20M2 15h20" strokeWidth="2"/>
-                                </svg>
-                            </div>
+  useEffect(() => {
 
-                            <div className="movie-info">
-                                <h3 className="movie-title">{movie.title}</h3>
-                                <div className="movie-rating">
-                                    {[...Array(5)].map((_, i) => (
-                                        <span
-                                            key={i}
-                                            className={`star ${i < movie.rating ? 'filled' : ''}`}
-                                        >
-                      ★
-                    </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+    fetch(`${API_BASE}/api/tmdb/now-playing/movies`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMovies(data.results || []);
+        setStartIndex(0);
+      })
+      .catch((err) => console.error("Error fetching new releases:", err));
+  }, []);
 
-            {/* Film Detail Overlay */}
-            {selectedMovie && (
-                <FilmDetailOverlay
-                    open={!!selectedMovie}
-                    movieTitle={selectedMovie.title}
-                    bannerImage={null} // optional: you can pass actual banner URL here
-                    summaryText={`This is a summary for ${selectedMovie.title}`}
-                    onClose={() => setSelectedMovie(null)}
-                />
-            )}
-        </div>
+  const total = movies.length;
+  const canGoPrev = startIndex > 0;
+  const canGoNext = startIndex + VISIBLE_COUNT < total;
+
+  const handlePrev = () => {
+    if (!canGoPrev) return;
+    setStartIndex((prev) => Math.max(prev - VISIBLE_COUNT, 0));
+  };
+
+  const handleNext = () => {
+    if (!canGoNext) return;
+    setStartIndex((prev) =>
+      Math.min(prev + VISIBLE_COUNT, Math.max(0, total - VISIBLE_COUNT))
     );
+  };
+
+  const visibleMovies = movies.slice(startIndex, startIndex + VISIBLE_COUNT);
+
+  return (
+    <section className="movies-section">
+      <div className="movies-header fade-in-up">
+        <h2 className="section-title">New Releases</h2>
+        <button className="view-all-link">View All →</button>
+      </div>
+
+      <div className="movies-carousel">
+        <button
+          className="carousel-btn carousel-btn-prev"
+          onClick={handlePrev}
+          disabled={!canGoPrev}
+        >
+          ‹
+        </button>
+
+        <div className="movies-grid movies-grid--single-row">
+          {visibleMovies.map((movie, index) => (
+            <MovieCard
+              key={movie.id}
+              title={movie.title || movie.name}
+              posterUrl={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : null
+              }
+              rating={Math.round((movie.vote_average || 0) / 2)} // 0–10 → 0–5 stars
+              gradient="gradient-red"
+              delay={index * 0.05}
+              onClick={() => console.log("Clicked New Release:", movie.title)}
+            />
+          ))}
+        </div>
+
+        <button
+          className="carousel-btn carousel-btn-next"
+          onClick={handleNext}
+          disabled={!canGoNext}
+        >
+          ›
+        </button>
+      </div>
+    </section>
+  );
 };
 
 export default NewReleases;
