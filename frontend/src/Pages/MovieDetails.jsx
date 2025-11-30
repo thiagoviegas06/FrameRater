@@ -1,6 +1,6 @@
 import React from 'react';
 import FilmDetailBanner from '../componentsAC/MovieDetailComponents/FilmDetailBanner';
-import SummaryGenreCastCard from '../componentsAC/MovieDetailComponents/SummaryGenreCastCard';
+import SummaryGenreCastCard from '../componentsAC/MovieDetailComponents/AboutGenreCastCard';
 import AlwaysVisTextBox from '../componentsAC/MovieDetailComponents/AlwaysVisTextBox';
 import ReviewsFilterBar from '../componentsAC/GlobalComponents/ReviewsFilterBar';
 import GlobalCommentCard from '../componentsAC/GlobalComponents/GlobalCommentCard';

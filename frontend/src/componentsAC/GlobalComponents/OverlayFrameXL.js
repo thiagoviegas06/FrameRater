@@ -25,7 +25,7 @@ export default function OverlayFrameXL({ open, onClose, children }) {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    background: 'rgba(0,0,0,0.8)', // semi-transparent background
+                    background: 'rgba(0,0,0,0.8)', // semi-transparent backdrop
                     zIndex: 1000,
                     overflowY: 'auto',
                 }}
@@ -34,21 +34,25 @@ export default function OverlayFrameXL({ open, onClose, children }) {
                     onClick={(e) => e.stopPropagation()}
                     sx={{
                         position: 'relative',
-                        width: { xs: '95%', sm: '90%', md: '80%', lg: 700 }, // larger width
-                        maxHeight: '95vh', // allow bigger overlay
+                        borderRadius: 3,
+                        backdropFilter: 'blur(12px)',
+                        bgcolor: 'rgba(20, 20, 20, 0.95)',
+                        overflow: 'hidden',
+                        boxShadow: '0 0 80px 6px rgba(255, 255, 255, 0.35)',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        borderRadius: 3,
-                        backdropFilter: 'blur(12px)', // stronger blur
-                        bgcolor: 'rgba(20, 20, 20, 0.95)',
-                        overflow: 'hidden',
-                        // WHITE OUTER GLOW
-                        boxShadow: '0 0 80px 6px rgba(255, 255, 255, 0.35)',
+                        width: 500,   // FIXED width
+                        height: 700,  // FIXED height
                     }}
                 >
-                    {children}
+                    {children || (
+                        <Box sx={{ width: '100%', height: '100%', bgcolor: 'blue', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <span style={{ color: 'white', fontWeight: 'bold' }}>TEST CONTENT</span>
+                        </Box>
+                    )}
                 </Box>
+
             </Box>
         </Fade>
     );

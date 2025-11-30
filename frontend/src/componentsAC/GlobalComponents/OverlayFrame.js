@@ -1,8 +1,7 @@
-// componentsAC/GlobalComponents/OverlayFrame.jsx
 import React, { useEffect, useState } from 'react';
-import { Box, Fade, Button } from '@mui/material';
+import { Box, Fade } from '@mui/material';
 
-export default function OverlayFrame({ open, onClose, children, showCloseButton = true }) {
+export default function OverlayFrame({ open, onClose, children }) {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -26,41 +25,28 @@ export default function OverlayFrame({ open, onClose, children, showCloseButton 
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    background: 'rgba(0,0,0,0.6)',
+                    background: 'rgba(0,0,0,0.8)', // overlay opacity
                     zIndex: 1000,
                     overflowY: 'auto',
                 }}
             >
                 <Box
-                    onClick={(e) => e.stopPropagation()} // stop clicks inside from closing
+                    onClick={(e) => e.stopPropagation()}
                     sx={{
-                        position: 'relative', // relative container for X
+                        position: 'relative',
                         width: { xs: '90%', sm: 400 },
                         maxHeight: '90vh',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
+                        borderRadius: 3,
+                        backdropFilter: 'blur(8px)',
+                        bgcolor: 'rgba(20, 20, 20, 0.95)',
+                        overflow: 'hidden',
+                        // RED OUTER GLOW
+                        boxShadow: '0 0 60px 3px rgba(255, 255, 255, 0.3)',
                     }}
                 >
-                    {/* X Button inside card (conditionally rendered) */}
-                    {showCloseButton && (
-                        <Button
-                            onClick={onClose}
-                            sx={{
-                                position: 'absolute',
-                                top: 1,      // vertical padding from top
-                                right: 12,  // horizontal padding from right
-                                minWidth: 0,
-                                padding: '4px', // extra padding around the X for easier clicking
-                                color: 'white',
-                                fontSize: '1.75rem', // slightly larger X
-                                zIndex: 10,
-                            }}
-                        >
-                            ×
-                        </Button>
-                    )}
-
                     {children}
                 </Box>
             </Box>

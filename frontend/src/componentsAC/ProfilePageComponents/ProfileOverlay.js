@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { getAuth } from 'firebase/auth';
 import ProfileBanner from './ProfileBanner';
 import EditableProfileSummary from './EditableProfileSummary';
 import ReviewsBar from '../GlobalComponents/ReviewsFilterBar';
@@ -8,38 +7,13 @@ import CommentCard from './UserCommentCard';
 import CloseButton from '../GlobalComponents/overlayXit';
 import ProfileIcon from '../GlobalComponents/ProfileIcon';
 
-export default function ProfileOverlay({ onClose }) {
-    const [userData, setUserData] = useState({
-        username: '',
-        profileImage: '',
-        profileSummary: '',
-        comments: [],
-    });
-
-    useEffect(() => {
-        const auth = getAuth();
-        const user = auth.currentUser;
-
-        if (user) {
-            setUserData({
-                username: user.displayName || '',
-                profileImage: user.photoURL || '',
-                profileSummary: '', // placeholder, can fetch from Firestore if desired
-                comments: [],       // placeholder, can fetch from Firestore if desired
-            });
-        } else {
-            // User not logged in
-            setUserData({
-                username: '',
-                profileImage: '',
-                profileSummary: '',
-                comments: [],
-            });
-        }
-    }, []);
-
-    const { username, profileImage, profileSummary, comments } = userData;
-
+export default function ProfileOverlay({
+                                           username = '',
+                                           profileImage = '',
+                                           profileSummary = '',
+                                           comments = [],
+                                           onClose,
+                                       }) {
     return (
         <Box
             sx={{

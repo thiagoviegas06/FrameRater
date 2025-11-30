@@ -28,7 +28,7 @@ export default function ReviewsFilterBar({
                     fontWeight: 600,
                     color: 'white',
                     fontSize: '0.95rem',
-                    paddingX: '0.1rem',
+                    paddingX: '1rem',
                 }}
             >
                 Reviews

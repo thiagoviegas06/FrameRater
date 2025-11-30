@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import FilmDetailOverlay from "../../componentsAC/MovieDetailComponents/FilmDetailOverlay";
+import FilmDetailFetcher from "../../componentsAC/MovieDetailComponents/FilmDetailFetcher";
 import "./MovieCard.css";
 
-const MovieCard = ({ title, rating, gradient, posterUrl, delay = 0, genreCastData, summaryText, bannerImage }) => {
+const MovieCard = ({ title, id, rating, gradient, posterUrl, delay = 0 }) => {
     const [overlayOpen, setOverlayOpen] = useState(false);
 
     return (
@@ -35,13 +35,14 @@ const MovieCard = ({ title, rating, gradient, posterUrl, delay = 0, genreCastDat
                 </div>
             </div>
 
-            <FilmDetailOverlay
+            {/* Fetch and display the overlay */}
+            <FilmDetailFetcher
+                movieId={id}
+                movieTitle={title}
+                posterUrl={posterUrl}   // pass the poster
+                rating={rating}         // pass the rating
                 open={overlayOpen}
                 onClose={() => setOverlayOpen(false)}
-                bannerImage={bannerImage}
-                movieTitle={title}
-                summaryText={summaryText}
-                genreCastData={genreCastData}
             />
         </>
     );

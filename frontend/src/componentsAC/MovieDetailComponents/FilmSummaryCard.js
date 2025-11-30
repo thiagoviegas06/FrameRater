@@ -1,35 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
-import FilmTitleBar from './FilmTitleBar';
-import SmartSummaryBox from './SmartSummaryBox';
-import FilmInfoBar from './FilmInfoBar';
-import NoInteractLikeCommentDisplayBar from '../GlobalComponents/NoInteractLikeCommentDisplayBar';
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 import AddToListButton from '../GlobalComponents/AddToListIcon';
 
 export default function FilmCard({
-    title,
-    rating,
-    year,
-    imdbRating,
-    matchPercent,
-    fetchSummary,
-    likes = 0,
-    comments = 0,
-    onAddClick,
-}) {
-    const [summaryText, setSummaryText] = useState('');
+                                     title,
+                                     rating,
+                                     year,
+                                     onAddClick,
+                                 }) {
 
-    useEffect(() => {
-        fetchSummary?.()
-            .then(result => {
-                if (typeof result === 'string') setSummaryText(result);
-                else if (result?.text) setSummaryText(result.text);
-                else setSummaryText('');
-            })
-            .catch(() => setSummaryText(''));
-    }, [fetchSummary]);
+    const CARD_HEIGHT = 70;
 
-    const CARD_HEIGHT = 120; // fixed height
+    // Convert rating → 5-star scale
+    // If rating <= 10, treat it as 0–10 and convert.
+    const starRating = rating
+        ? rating > 5
+            ? Math.round((rating / 10) * 5)
+            : Math.round(rating)
+        : 0;
+
+    const renderStars = count =>
+        '★★★★★☆☆☆☆☆'.slice(5 - count, 10 - count);
+    // Result: 0→☆☆☆☆☆ , 3→★★★☆☆ , 5→★★★★★
 
     return (
         <Box
@@ -43,34 +35,46 @@ export default function FilmCard({
                 flexDirection: 'column',
                 width: 'calc(100% - 32px)',
                 maxWidth: 350,
-                height: CARD_HEIGHT,       // fixed
-                overflow: 'hidden',       // hide overflow, scroll inside content
+                height: CARD_HEIGHT,
+                justifyContent: 'center',
             }}
         >
-            {/* Top line: Title + Add */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 22 }}>
-                <FilmTitleBar title={title} fontSize="0.85rem" />
+            {/* Row 1: Title + Add */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography
+                    sx={{
+                        fontSize: '0.9rem',
+                        fontWeight: 700,
+                        color: 'white',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '80%',
+                    }}
+                >
+                    {title}
+                </Typography>
+
                 <AddToListButton size={18} onClick={onAddClick} />
             </Box>
 
-            {/* Scrollable content */}
-            <Box sx={{ overflowY: 'auto', mt: 0.5, flex: 1 }}>
-                {/* Info + Likes/Comments */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3, mb: 0.5 }}>
-
-                    <NoInteractLikeCommentDisplayBar
-                        likes={likes}
-                        comments={comments}
-                        fontSize="0.65rem"
-                    />
-                </Box>
-
-                {/* Smart Summary */}
-                <SmartSummaryBox
-                    fetchSummary={async () => summaryText || 'No summary available.'}
-                    fontSize="0.8rem"
-                />
-            </Box>
+            {/* Row 2: Stars + Year */}
+            <Typography
+                sx={{
+                    mt: 0.5,
+                    fontSize: '0.8rem',
+                    color: 'white',
+                    opacity: 0.9,
+                }}
+            >
+                {renderStars(starRating)} • {year}
+            </Typography>
         </Box>
     );
 }

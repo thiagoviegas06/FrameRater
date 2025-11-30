@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, TextField, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { fetchWithAuth } from '../../api/client'; // your auth-aware fetch
 
-export default function EditableTextBox({ initialText = '', onSend }) {
+export default function EditableTextBox({ movieId, initialText = '', onCommentPosted }) {
     const [text, setText] = useState(initialText);
+    const [loading, setLoading] = useState(false);
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -14,11 +16,36 @@ export default function EditableTextBox({ initialText = '', onSend }) {
         }
     }, []);
 
-    const handleSend = () => {
-        if (!text.trim()) return;
-        if (onSend) onSend(text.trim());
-        setText(''); // clear input after sending
-        if (inputRef.current) inputRef.current.focus(); // keep focus
+    const handleSend = async () => {
+        const trimmedText = text.trim();
+        if (!trimmedText || loading) return;
+
+        setLoading(true);
+
+        try {
+            const payload = {
+                movie_id: movieId,
+                body: trimmedText,
+            };
+
+            const savedReview = await fetchWithAuth('/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            // Notify parent of new comment
+            if (onCommentPosted) onCommentPosted(savedReview);
+
+            // Clear the input
+            setText('');
+            if (inputRef.current) inputRef.current.focus();
+        } catch (err) {
+            console.error('Failed to post review:', err);
+            alert('Failed to post review. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -26,14 +53,16 @@ export default function EditableTextBox({ initialText = '', onSend }) {
             sx={{
                 bgcolor: '#333',
                 color: 'white',
-                borderRadius: 2,
-                p: 2,
+                p: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                width: '100%',
+                opacity: 0.9,
+                borderRadius: 2, // rounded corners
+                boxShadow: '0 0 4px rgba(255,255,255,0.4)', // subtle inner shadow for depth
             }}
         >
-            {/* Text area */}
+
+        {/* Text area */}
             <TextField
                 inputRef={inputRef}
                 value={text}
@@ -41,7 +70,7 @@ export default function EditableTextBox({ initialText = '', onSend }) {
                 multiline
                 minRows={3}
                 variant="standard"
-                placeholder="Type your reply..."
+                placeholder="Leave a review..."
                 sx={{
                     width: '100%',
                     bgcolor: 'transparent',
@@ -61,13 +90,12 @@ export default function EditableTextBox({ initialText = '', onSend }) {
                 }}
             />
 
-            {/* Send icon button bottom right */}
+            {/* Send icon button */}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
                 <IconButton
                     onClick={handleSend}
-                    disabled={!text.trim()}
+                    disabled={!text.trim() || loading}
                     sx={{
-                        bgcolor: '#555',
                         '&:hover': { bgcolor: '#666' },
                         color: 'white',
                         width: 30,

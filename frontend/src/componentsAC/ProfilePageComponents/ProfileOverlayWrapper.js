@@ -1,104 +1,108 @@
 import React, { useEffect, useState } from "react";
-import OverlayFrame from "../GlobalComponents/OverlayFrame";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import OverlayFrameXL from "../GlobalComponents/OverlayFrameXL";
 import ProfileOverlay from "./ProfileOverlay";
 import { useOverlay } from "../../context/OverlayProvider";
-import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { useAuth } from "../../context/AuthContext";
+// CORRECTED IMPORT PATH AND FUNCTION NAME
+import { fetchWithAuth } from "../../api/client";
 
 export default function ProfileOverlayWrapper() {
     const { profileOverlayOpen, setProfileOverlayOpen } = useOverlay();
+    const { user, loading: authLoading } = useAuth();
+
     const [profileData, setProfileData] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const handleClose = () => setProfileOverlayOpen(false);
 
     useEffect(() => {
-        if (!profileOverlayOpen) return;
-
-        const fetchProfile = async () => {
-            setLoading(true);
-            const auth = getAuth();
-            const user = auth.currentUser;
-
-            if (user) {
-                try {
-                    const docRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(docRef);
-
-                    if (docSnap.exists()) {
-                        setProfileData(docSnap.data());
-                    } else {
-                        setProfileData({
-                            username: user.displayName || "Demo User",
-                            profileSummary: "This is a dummy profile summary.",
-                            profileImage: "https://via.placeholder.com/150",
-                            comments: [],
-                        });
-                    }
-                } catch (err) {
-                    console.error("Error fetching profile:", err);
-                    setProfileData({
-                        username: "Demo User",
-                        profileSummary: "Error fetching profile. Showing dummy data.",
-                        profileImage: "https://via.placeholder.com/150",
-                        comments: [],
-                    });
-                }
-            } else {
-                setProfileData({
-                    username: "Demo User",
-                    profileSummary: "No user logged in. Showing dummy profile.",
-                    profileImage: "https://via.placeholder.com/150",
-                    comments: [],
-                });
-            }
-
+        // Exit early if condition is not met or user is not available
+        if (!profileOverlayOpen || authLoading || !user) {
+            setProfileData(null);
             setLoading(false);
+            return;
+        }
+
+        const fetchProfileData = async () => {
+            setLoading(true);
+            setError(null);
+
+            try {
+                if (user && user.getIdToken) {
+                    const tempToken = await user.getIdToken();
+                    console.log("FRESH FIREBASE ID TOKEN:", tempToken); // <--- COPY THIS TOKEN
+                }
+                // -----------------------------------
+
+                // Original API calls:
+                const [meResponse, reviewsResponse] = await Promise.all([
+                    fetchWithAuth(`/api/me`),
+                    fetchWithAuth(`/api/me/reviews`),
+                ]);
+
+                // Map and combine the fetched data
+                setProfileData({
+                    username: meResponse.display_name || 'N/A',
+                    profileSummary: meResponse.bio || 'No summary provided.',
+                    profileImage: meResponse.photo_url || 'https://via.placeholder.com/150',
+
+                    comments: reviewsResponse.map(c => ({
+                        movieTitle: c.movie_title || c.tv_title,
+                        commentText: c.comment_text,
+                    })) || [],
+                });
+            } catch (err) {
+                console.error("Error fetching profile data:", err);
+                setError(err.message || "Failed to load profile. Please try again.");
+            } finally {
+                setLoading(false);
+            }
         };
 
-        fetchProfile();
-    }, [profileOverlayOpen]);
+        fetchProfileData();
 
+    }, [profileOverlayOpen, authLoading, user]);
+
+    // --- Conditional Content Rendering ---
+    let content;
+
+    if (loading || authLoading) {
+        content = (
+            <Box sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                <CircularProgress color="secondary" />
+                <Typography sx={{ mt: 2, color: 'silver' }}>Loading Profile...</Typography>
+            </Box>
+        );
+    } else if (error) {
+        content = (
+            <Box sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography color="error">{error}</Typography>
+            </Box>
+        );
+    } else if (!user) {
+        content = (
+            <Box sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography sx={{ color: 'silver' }}>You must be logged in to view your profile.</Typography>
+            </Box>
+        );
+    } else if (profileData) {
+        content = (
+            <ProfileOverlay
+                username={profileData.username}
+                profileSummary={profileData.profileSummary}
+                profileImage={profileData.profileImage}
+                comments={profileData.comments}
+                onClose={handleClose}
+            />
+        );
+    }
+
+    // --- Final Render ---
     return (
-        <OverlayFrame
-            open={profileOverlayOpen}
-            onClose={() => setProfileOverlayOpen(false)}
-        >
-            {loading && (
-                <div style={{ color: "white", textAlign: "center", padding: "2rem" }}>
-                    Loading profile...
-                </div>
-            )}
-
-            {!loading && profileData && (
-                <ProfileOverlay
-                    username={profileData.username}
-                    profileSummary={profileData.profileSummary}
-                    profileImage={profileData.profileImage}
-                    comments={profileData.comments || []}
-                    onClose={() => setProfileOverlayOpen(false)}
-                />
-            )}
-
-            {/* Fallback: show something even if profileData is null */}
-            {!loading && !profileData && (
-                <div
-                    style={{
-                        color: "white",
-                        background: "#333",
-                        padding: "2rem",
-                        borderRadius: "8px",
-                        textAlign: "center",
-                    }}
-                >
-                    No profile data. This is a placeholder.
-                    <button
-                        onClick={() => setProfileOverlayOpen(false)}
-                        style={{ marginTop: "1rem" }}
-                    >
-                        Close
-                    </button>
-                </div>
-            )}
-        </OverlayFrame>
+        <OverlayFrameXL open={profileOverlayOpen} onClose={handleClose}>
+            {content}
+        </OverlayFrameXL>
     );
 }
