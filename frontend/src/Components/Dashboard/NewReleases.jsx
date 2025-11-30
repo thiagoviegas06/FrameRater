@@ -1,45 +1,86 @@
-import React from "react";
-import "../../Pages/Dashboard.css";
+import React, { useEffect, useState } from "react";
+import { API_BASE } from "../../api/config";
 import MovieCard from "../MovieCard/MovieCard";
+import "../../Pages/Dashboard.css";
 
-const newReleasesData = [
-  { id: 1, title: "Dune: Part Two", rating: 5, gradient: "gradient-red" },
-  { id: 2, title: "Poor Things", rating: 4, gradient: "gradient-gray" },
-  { id: 3, title: "The Zone of Interest", rating: 5, gradient: "gradient-red" },
-  { id: 4, title: "Killers of the Flower Moon", rating: 5, gradient: "gradient-red" },
-  { id: 5, title: "Oppenheimer", rating: 5, gradient: "gradient-red" },
-  { id: 6, title: "The Holdovers", rating: 4, gradient: "gradient-gray" },
-];
+const VISIBLE_COUNT = 6;
 
 const NewReleases = () => {
-  const handleCardClick = (movie) => {
-    // For overlay
+  const [movies, setMovies] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
 
-    console.log("Clicked movie:", movie.title);
+  useEffect(() => {
+    // TODO: swap endpoint if your backend has a dedicated "new releases" route
+    fetch(`${API_BASE}/api/tmdb/now-playing/movies`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMovies(data.results || []);
+        setStartIndex(0);
+      })
+      .catch((err) => console.error("Error fetching new releases:", err));
+  }, []);
+
+  const total = movies.length;
+  const canGoPrev = startIndex > 0;
+  const canGoNext = startIndex + VISIBLE_COUNT < total;
+
+  const handlePrev = () => {
+    if (!canGoPrev) return;
+    setStartIndex((prev) => Math.max(prev - VISIBLE_COUNT, 0));
   };
 
-  return (
-    <div className="container">
-      <section className="movies-section">
-        <div className="movies-header fade-in-up">
-          <h2 className="section-title">New Releases</h2>
-          <button className="view-all-link">View All →</button>
-        </div>
+  const handleNext = () => {
+    if (!canGoNext) return;
+    setStartIndex((prev) =>
+      Math.min(prev + VISIBLE_COUNT, Math.max(0, total - VISIBLE_COUNT))
+    );
+  };
 
-        <div className="movies-grid">
-          {newReleasesData.map((movie, index) => (
+  const visibleMovies = movies.slice(startIndex, startIndex + VISIBLE_COUNT);
+
+  return (
+    <section className="movies-section">
+      <div className="movies-header fade-in-up">
+        <h2 className="section-title">New Releases</h2>
+        <button className="view-all-link">View All →</button>
+      </div>
+
+      <div className="movies-carousel">
+        <button
+          className="carousel-btn carousel-btn-prev"
+          onClick={handlePrev}
+          disabled={!canGoPrev}
+        >
+          ‹
+        </button>
+
+        <div className="movies-grid movies-grid--single-row">
+          {visibleMovies.map((movie, index) => (
             <MovieCard
               key={movie.id}
-              title={movie.title}
-              rating={movie.rating}
-              gradient={movie.gradient}
-              delay={index * 0.1}
-              onClick={() => handleCardClick(movie)}
+              title={movie.title || movie.name}
+              posterUrl={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : null
+              }
+              rating={Math.round((movie.vote_average || 0) / 2)} // 0–10 → 0–5 stars
+              gradient="gradient-red"
+              delay={index * 0.05}
+              onClick={() => console.log("Clicked New Release:", movie.title)}
             />
           ))}
         </div>
-      </section>
-    </div>
+
+        <button
+          className="carousel-btn carousel-btn-next"
+          onClick={handleNext}
+          disabled={!canGoNext}
+        >
+          ›
+        </button>
+      </div>
+    </section>
   );
 };
 

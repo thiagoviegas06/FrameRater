@@ -1,86 +1,84 @@
+// src/Components/Trending/TrendingMovies.jsx
 import React, { useEffect, useState } from "react";
-import { fetchPublic } from "../../api/publicClient";
-import "../../Pages/Dashboard.css";
+import { API_BASE } from "../../api/config";
+import MovieCard from "../MovieCard/MovieCard";
+
+const VISIBLE_COUNT = 6;
+
+console.log(API_BASE)
 
 const TrendingNow = () => {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [startIndex, setStartIndex] = useState(0);
 
   useEffect(() => {
-    const loadTrending = async () => {
-      try {
-        const data = await fetchPublic("/api/tmdb/trending/movies");
+    fetch(`${API_BASE}/api/tmdb/trending/movies`)
+      .then((res) => res.json())
+      .then((data) => {
         setMovies(data.results || []);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load trending movies.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadTrending();
+        setStartIndex(0);
+      })
+      .catch((err) => console.error("Error fetching trending:", err));
   }, []);
 
-  if (loading) {
-    return <div className="container"><p style={{ color: "white" }}>Loading trending movies...</p></div>;
-  }
+  const handlePrev = () => {
+    setStartIndex((prev) => Math.max(prev - VISIBLE_COUNT, 0));
+  };
 
-  if (error) {
-    return <div className="container"><p style={{ color: "red" }}>{error}</p></div>;
-  }
+  const handleNext = () => {
+    setStartIndex((prev) =>
+      Math.min(prev + VISIBLE_COUNT, Math.max(0, movies.length - VISIBLE_COUNT))
+    );
+  };
+
+  const visibleMovies = movies.slice(startIndex, startIndex + VISIBLE_COUNT);
+
+  const canGoPrev = startIndex > 0;
+  const canGoNext = startIndex + VISIBLE_COUNT < movies.length;
 
   return (
-    <div className="container">
-      <section className="movies-section">
-        <div className="movies-header fade-in-up">
-          <h2 className="section-title">Trending Now</h2>
-          <a href="/trending" className="view-all-link">View All →</a>
+    <section className="movies-section">
+      <div className="movies-header fade-in-up">
+        <h2 className="section-title">Trending Now</h2>
+        <button className="view-all-link">View All →</button>
+      </div>
+
+      <div className="movies-carousel">
+        <button
+          className="carousel-btn carousel-btn-prev"
+          onClick={handlePrev}
+          disabled={!canGoPrev}
+        >
+          ‹
+        </button>
+
+        <div className="movies-grid movies-grid--single-row">
+          {visibleMovies.map((movie, index) => (
+            <MovieCard
+              key={movie.id}
+              title={movie.title}
+              posterUrl={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : null
+              }
+              rating={Math.round(movie.vote_average / 2)}
+              gradient="gradient-red"
+              delay={index * 0.05}
+              onClick={() => console.log("Clicked:", movie.title)}
+            />
+          ))}
         </div>
 
-        <div className="movies-grid">
-          {movies.map((movie, index) => {
-            const poster = movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : null;
-
-            return (
-              <div
-                className="movie-card fade-in-up"
-                key={movie.id}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className={poster ? "movie-poster" : "movie-poster gradient-gray"}>
-                  {poster ? (
-                    <img src={poster} alt={movie.title} className="poster-img" />
-                  ) : (
-                    <svg className="film-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <rect x="2" y="3" width="20" height="18" rx="2" strokeWidth="2"/>
-                      <path d="M7 3v18M17 3v18M2 9h20M2 15h20" strokeWidth="2"/>
-                    </svg>
-                  )}
-                </div>
-
-                <div className="movie-info">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <div className="movie-rating">
-                    {[...Array(5)].map((_, i) => (
-                      <span
-                        key={i}
-                        className={`star ${i < Math.round(movie.vote_average / 2) ? "filled" : ""}`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-    </div>
+        <button
+          className="carousel-btn carousel-btn-next"
+          onClick={handleNext}
+          disabled={!canGoNext}
+        >
+          ›
+        </button>
+      </div>
+    </section>
   );
 };
 

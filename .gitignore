@@ -69,7 +69,6 @@ backend/firebase-service-account.json
 frontend/node_modules/
 frontend/.pnp
 frontend/.pnp.js
-frontend/package-lock.json
 
 # testing
 frontend/coverage

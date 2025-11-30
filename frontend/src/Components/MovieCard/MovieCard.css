@@ -2,6 +2,7 @@
 .movie-card {
   cursor: pointer;
   transition: transform 0.3s ease;
+  max-width: 150px;
 }
 
 .movie-card:hover {
@@ -15,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -45,10 +46,8 @@
 
 /* --- Film Icon --- */
 .film-icon {
-  width: 3.5rem;
-  height: 3.5rem;
-  opacity: 0.7;
-  transition: all 0.3s ease;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .gradient-red .film-icon {
@@ -77,10 +76,10 @@
 }
 
 .movie-title {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #f4f4f5;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -92,9 +91,7 @@
 }
 
 .star {
-  font-size: 1rem;
-  color: #3f3f46;
-  transition: color 0.2s ease;
+  font-size: 0.85rem;
 }
 
 .star.filled {
@@ -104,7 +101,16 @@
 .movie-card:hover .star.filled {
   color: #fbbf24;
 }
+.movies-carousel {
+  position: relative;
+}
 
+.movies-grid--single-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
 /* --- Animation --- */
 .fade-in-up {
   opacity: 0;

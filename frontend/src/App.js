@@ -40,7 +40,7 @@ function App() {
               /> */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/moviedetails" element={<MovieDetails />} />
-              <Route path="/profile" element={<Profile />} />
+              {/* <Route path="/profile" element={<Profile />} /> */}
               {/* <Route
                 path="/profile"
                 element={
