@@ -1,4 +1,3 @@
-// frontend/src/api/client.js
 import { auth } from "../firebase";
 import { API_BASE } from "./config";
 
