@@ -1,8 +1,9 @@
 import os
 from flask import Flask, jsonify, request, abort
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from auth import verify_bearer
 from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import auth, credentials
@@ -19,7 +20,9 @@ def init_firebase():
 init_firebase()
 
 app = Flask(__name__)
-CORS(app)
+
+# CORS enable
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 def get_db_conn():
     return psycopg2.connect(
@@ -65,9 +68,10 @@ def get_data():
 # ============================================
 
 @app.route("/api/me", methods=["GET"])
+@cross_origin()
 def me():
     user = require_user()
-    uid = user["uid"]
+    uid = verify_bearer()
     email = user.get("email")
     display_name = user.get("name")
 
@@ -110,7 +114,7 @@ def list_movies():
         sql += " WHERE title ILIKE %s"
         params.append(f"%{q}%")
     sql += " ORDER BY popularity DESC NULLS LAST, id DESC LIMIT 50"
-    
+
     with get_db_conn() as con, con.cursor(cursor_factory=RealDictCursor) as cur:
         cur.execute(sql, params)
         rows = cur.fetchall()
@@ -143,7 +147,7 @@ def movie_detail(movie_id: int):
             ORDER BY g.name
         """, (movie_id,))
         genres = [row["name"] for row in cur.fetchall()]
-    
+
     movie["genres"] = genres
     return jsonify(movie)
 
@@ -171,10 +175,10 @@ def tmdb_search_movies():
     """Search movies on TMDb"""
     query = request.args.get("q", "")
     page = request.args.get("page", 1, type=int)
-    
+
     if not query:
         return jsonify({"error": "Query parameter 'q' is required"}), 400
-    
+
     try:
         results = tmdb_client.search_movies(query, page)
         return jsonify(results)
@@ -186,10 +190,10 @@ def tmdb_search_tv():
     """Search TV shows on TMDb"""
     query = request.args.get("q", "")
     page = request.args.get("page", 1, type=int)
-    
+
     if not query:
         return jsonify({"error": "Query parameter 'q' is required"}), 400
-    
+
     try:
         results = tmdb_client.search_tv(query, page)
         return jsonify(results)
@@ -201,10 +205,10 @@ def tmdb_search_multi():
     """Search movies and TV shows on TMDb"""
     query = request.args.get("q", "")
     page = request.args.get("page", 1, type=int)
-    
+
     if not query:
         return jsonify({"error": "Query parameter 'q' is required"}), 400
-    
+
     try:
         results = tmdb_client.search_multi(query, page)
         return jsonify(results)
@@ -470,10 +474,10 @@ def tmdb_search_person():
     """Search for people on TMDb"""
     query = request.args.get("q", "")
     page = request.args.get("page", 1, type=int)
-    
+
     if not query:
         return jsonify({"error": "Query parameter 'q' is required"}), 400
-    
+
     try:
         results = tmdb_client.search_person(query, page)
         return jsonify(results)
@@ -530,7 +534,7 @@ def add_review():
 def get_favorite_movies():
     """Get user's favorite movies with all cached TMDb data"""
     user = require_user()
-    
+
     with get_db_conn() as con, con.cursor(cursor_factory=RealDictCursor) as cur:
         cur.execute("""
             SELECT m.id, m.title, m.release_date, m.tmdb_id,
@@ -549,7 +553,7 @@ def get_favorite_movies():
 def add_favorite_movie(movie_id: int):
     """Add a movie to user's favorites"""
     user = require_user()
-    
+
     with get_db_conn() as con, con.cursor() as cur:
         cur.execute("""
             INSERT INTO favorite_movie (uid, movie_id)
@@ -562,7 +566,7 @@ def add_favorite_movie(movie_id: int):
 def remove_favorite_movie(movie_id: int):
     """Remove a movie from user's favorites"""
     user = require_user()
-    
+
     with get_db_conn() as con, con.cursor() as cur:
         cur.execute("""
             DELETE FROM favorite_movie
@@ -578,7 +582,7 @@ def remove_favorite_movie(movie_id: int):
 def get_recommendations():
     """Get movie recommendations based on user's favorites"""
     user = require_user()
-    
+
     with get_db_conn() as con, con.cursor(cursor_factory=RealDictCursor) as cur:
         cur.execute("""
             SELECT m.tmdb_id
@@ -588,23 +592,23 @@ def get_recommendations():
             LIMIT 5;
         """, (user["uid"],))
         favorites = cur.fetchall()
-    
+
     if not favorites:
         return jsonify({"message": "No favorites found. Add some movies to your favorites first!"})
-    
+
     all_recommendations = []
     seen_ids = set()
-    
+
     try:
         for fav in favorites:
             tmdb_id = fav["tmdb_id"]
             recs = tmdb_client.get_movie_recommendations(tmdb_id)
-            
+
             for movie in recs.get("results", [])[:5]:
                 if movie["id"] not in seen_ids:
                     seen_ids.add(movie["id"])
                     all_recommendations.append(movie)
-        
+
         return jsonify({
             "based_on_favorites": len(favorites),
             "recommendations": all_recommendations[:20]

@@ -1,27 +1,32 @@
 # backend/auth.py
 import os
-from typing import Optional
-from fastapi import Header, HTTPException, status
 import firebase_admin
-from firebase_admin import credentials, auth
+from firebase_admin import credentials, auth as fb_auth
+from flask import request, abort
 
-# Init Admin SDK once
+# Initialize Firebase Admin SDK once
 if not firebase_admin._apps:
-    # Use an absolute path to the Firebase service account JSON.  This allows
-    # the API to be started from any working directory and still locate the
-    # credentials file shipped alongside this module.  A custom path can also
-    # be provided via the FIREBASE_SERVICE_ACCOUNT environment variable.
+    # Default to firebase-service-account.json sitting next to this file
     default_path = os.path.join(os.path.dirname(__file__), "firebase-service-account.json")
     svc_path = os.getenv("FIREBASE_SERVICE_ACCOUNT", default_path)
     cred = credentials.Certificate(svc_path)
     firebase_admin.initialize_app(cred)
 
-def verify_bearer(authorization: Optional[str] = Header(None)) -> str:
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Bearer token")
-    token = authorization.split(" ", 1)[1]
+
+def verify_bearer() -> str:
+    """
+    For Flask routes: validates the Authorization: Bearer <token> header
+    and returns the Firebase UID if valid. Otherwise aborts with 401.
+    """
+    auth_header = request.headers.get("Authorization", "")
+
+    if not auth_header.startswith("Bearer "):
+        abort(401, description="Missing Bearer token")
+
+    token = auth_header.split(" ", 1)[1]
+
     try:
-        decoded = auth.verify_id_token(token)
-        return decoded["uid"]  # return Firebase uid
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        decoded = fb_auth.verify_id_token(token)
+        return decoded["uid"]
+    except Exception:
+        abort(401, description="Invalid token")
