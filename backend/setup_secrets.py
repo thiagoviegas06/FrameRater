@@ -27,7 +27,7 @@ def fetch_secrets():
         
         # Write .env file
         with open('.env', 'w') as f:
-            f.write("Auto-generated from AWS Secrets Manager\n\n")
+        
             for key, value in config.items():
                 f.write(f"{key}={value}\n")
             f.write("FIREBASE_SERVICE_ACCOUNT=firebase-service-account.json\n")
