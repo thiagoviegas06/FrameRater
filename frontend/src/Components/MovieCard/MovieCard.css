@@ -1,0 +1,179 @@
+/* --- Movie Card Container --- */
+.movie-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  max-width: 150px;
+}
+
+.movie-card:hover {
+  transform: translateY(-8px);
+}
+
+/* --- Poster / Thumbnail --- */
+.movie-poster {
+  aspect-ratio: 2/3;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+/* Favorite Heart Button */
+.favorite-btn {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    border: none;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.favorite-btn.favorited {
+    background: rgba(255, 0, 70, 0.75);
+}
+
+.favorite-btn.favorited:hover {
+    background: rgba(255, 0, 70, 0.9);
+}
+
+
+.movie-card:hover .movie-poster {
+  box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.3),
+    0 10px 10px -5px rgba(239, 68, 68, 0.2);
+}
+
+.movie-card:hover .movie-poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #ef4444;
+  border-radius: 0.5rem;
+}
+
+/* Gradient Backgrounds */
+.gradient-red {
+  background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+}
+
+.gradient-gray {
+  background: linear-gradient(135deg, #3f3f46 0%, #27272a 100%);
+}
+
+/* --- Film Icon --- */
+.film-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.gradient-red .film-icon {
+  color: #ef4444;
+}
+
+.gradient-gray .film-icon {
+  color: #71717a;
+}
+
+.movie-card:hover .film-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Poster IMG (when API image is used) */
+.poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Movie Info --- */
+.movie-info {
+  text-align: left;
+}
+
+.movie-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  margin-bottom: 0.35rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-rating {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.star {
+  font-size: 0.85rem;
+}
+
+.star.filled {
+  color: #eab308;
+}
+
+.movie-card:hover .star.filled {
+  color: #fbbf24;
+}
+.movies-carousel {
+  position: relative;
+}
+
+.movies-grid--single-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+/* --- Animation --- */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
