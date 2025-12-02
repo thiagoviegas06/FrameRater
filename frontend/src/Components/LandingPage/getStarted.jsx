@@ -1,22 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import '../../Pages/LandingPage.css';
+import { useOverlay } from '../../context/OverlayProvider';
 
-const getStarted = () => {
+const GetStarted = () => {
+    const { setCreateAccountOverlayOpen } = useOverlay();
+
     return (
         <div className='wrapper gs-wrapper'>
             <div className="gs-container">
                 <div className="gs-content">
                     <h2 className="gs-title">
-                        Watch More. Rate More. <br></br>Discover More.
+                        Watch More. Rate More. <br />Discover More.
                     </h2>
                     <p className="gs-description">
                         FrameRatr’s adaptive engine learns your taste, one movie at a time.
                     </p>
                     <div className="gs-actions">
-                        <Link to="./login" className="gs-btn-secondary">
+                        <button
+                            type="button"
+                            className="gs-btn-secondary"
+                            onClick={() => setCreateAccountOverlayOpen(true)}
+                        >
                             Get Started
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -24,4 +30,4 @@ const getStarted = () => {
     );
 };
 
-export default getStarted;
+export default GetStarted;

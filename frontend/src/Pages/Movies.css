@@ -1,0 +1,36 @@
+.movies-page {
+    padding: 20px;
+}
+
+.trending-section {
+    margin-bottom: 40px;
+}
+
+.trending-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-title {
+    font-size: 24px;
+    color: white;
+}
+
+.movies-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 8px;
+    scroll-behavior: smooth;
+}
+
+.movies-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.movies-grid::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}

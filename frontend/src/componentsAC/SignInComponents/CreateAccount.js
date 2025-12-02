@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOverlay } from '../../context/OverlayProvider';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { fetchWithAuth } from '../../api/client'; // your auth fetch helper
+import { fetchWithAuth } from '../../api/client';
 import { Card, CardContent, TextField, Typography, Button, Link, Box } from '@mui/material';
 
 export default function CreateAccountCard() {
@@ -11,7 +11,6 @@ export default function CreateAccountCard() {
     const { setCreateAccountOverlayOpen, setLoginOverlayOpen } = useOverlay();
 
     const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -26,32 +25,23 @@ export default function CreateAccountCard() {
             return;
         }
 
-        if (!username.trim()) {
-            setError('Please provide a username.');
-            return;
-        }
-
         setLoading(true);
         try {
             // 1️⃣ Create Firebase Auth user
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
 
-            // 2️⃣ Update Firebase profile with displayName
-            await updateProfile(userCred.user, { displayName: username });
-
-            // 3️⃣ Insert into your app_user table via backend API
+            // 2️⃣ Insert into your app_user table via backend API
             await fetchWithAuth('/users', {
                 method: 'POST',
                 body: JSON.stringify({
                     uid: userCred.user.uid,
                     email,
-                    display_name: username,
                     photo_url: userCred.user.photoURL || null,
                 }),
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            // 4️⃣ Close overlay, open login overlay
+            // 3️⃣ Close overlay, open login overlay
             setCreateAccountOverlayOpen(false);
             setLoginOverlayOpen(true);
         } catch (err) {
@@ -92,7 +82,6 @@ export default function CreateAccountCard() {
 
                 <form onSubmit={handleSubmit}>
                     <TextField label="Email" fullWidth variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} sx={textFieldSx} />
-                    <TextField label="Username" fullWidth variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} sx={textFieldSx} />
                     <TextField label="Password" type="password" fullWidth variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} sx={textFieldSx} />
                     <TextField label="Confirm Password" type="password" fullWidth variant="outlined" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} sx={textFieldSx} />
 

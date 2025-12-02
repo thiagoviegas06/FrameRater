@@ -4,9 +4,6 @@ import OverlayFrameXL from '../GlobalComponents/OverlayFrameXL';
 import FilmDetailBanner from './FilmDetailBanner';
 import FilmSummaryCard from './FilmSummaryCard';
 import AboutGenreCastCard from './AboutGenreCastCard';
-import AlwaysVisTextBox from './AlwaysVisTextBox';
-import ReviewsFilterBar from '../GlobalComponents/ReviewsFilterBar';
-import GlobalCommentCard from '../GlobalComponents/GlobalCommentCard';
 import CloseButton from '../GlobalComponents/overlayXit';
 
 export default function FilmDetailOverlay({
@@ -14,13 +11,9 @@ export default function FilmDetailOverlay({
                                               bannerImage,
                                               movieTitle = 'Movie Title',
                                               summaryText = 'No summary available',
-                                              genreCastData = {},  // { rating, year, imdbRating, genres: [], cast: [] }
-                                              userNotes = '',
-                                              comments = [],
-                                              user = null,
+                                              genreCastData = {},
                                               onClose,
                                           }) {
-    const BANNER_HEIGHT = 240;
     const MAX_SUMMARY_WIDTH = 350;
 
     return (
@@ -30,12 +23,12 @@ export default function FilmDetailOverlay({
                     position: 'relative',
                     width: 500,
                     maxHeight: '90vh',
-                    bgcolor: 'rgba(20, 20, 20, 0.9)',
+                    bgcolor: 'rgba(20, 20, 20, 0.95)',
                     borderRadius: 3,
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
-                    boxShadow: '0 0 25px rgba(192,192,192,0.05)',
+                    boxShadow: '0 0 25px rgba(192,192,192,0.05)'
                 }}
             >
                 {/* Close Button */}
@@ -43,15 +36,22 @@ export default function FilmDetailOverlay({
                     <CloseButton onClick={onClose} />
                 </Box>
 
-                {/* Banner & FilmSummaryCard */}
-                <Box sx={{ position: 'relative', flexShrink: 0 }}>
+                {/* Pinned Banner - 50% of overlay height */}
+                <Box
+                    sx={{
+                        position: 'relative',
+                        height: '50%',    // not hard-coded — dynamic!
+                        width: '100%',
+                        flexShrink: 0,
+                    }}
+                >
                     {bannerImage ? (
-                        <FilmDetailBanner image={bannerImage} height={BANNER_HEIGHT} />
+                        <FilmDetailBanner image={bannerImage} height="100%" />
                     ) : (
                         <Box
                             sx={{
                                 width: '100%',
-                                height: BANNER_HEIGHT,
+                                height: '100%',
                                 bgcolor: '#222',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -64,6 +64,7 @@ export default function FilmDetailOverlay({
                         </Box>
                     )}
 
+                    {/* Summary Card overlay */}
                     <Box
                         sx={{
                             position: 'absolute',
@@ -85,79 +86,20 @@ export default function FilmDetailOverlay({
                     </Box>
                 </Box>
 
-                {/* Scrollable content */}
-                {/* Scrollable content */}
-                <Box sx={{ overflowY: 'auto', flexGrow: 1, px: 3, mt: 2, pb: 2 }}>
-
-                    {/* About, Genre, Cast */}
+                <Box
+                    sx={{
+                        overflowY: 'auto',
+                        flexGrow: 1,
+                        px: 3,
+                        pt: 2,
+                        WebkitOverflowScrolling: "touch",
+                    }}
+                >
                     <AboutGenreCastCard
                         about={summaryText}
                         genres={genreCastData.genres || []}
                         cast={(genreCastData.cast || []).slice(0, 3)}
                     />
-
-                    {/* If NOT logged in → show the login message and END */}
-                    {!user && (
-                        <Box
-                            sx={{
-                                color: '#aaa',
-                                textAlign: 'center',
-                                mt: 4,
-                                fontWeight: '600',
-                                paddingBottom: 5,
-                            }}
-                        >
-                            Login to Join the Conversation
-                        </Box>
-                    )}
-
-                    {/* If logged in → show text box + reviews + comments */}
-                    {user && (
-                        <>
-                            {/* Write-a-review box */}
-                            <Box sx={{ mt: 2, width: '90%', mx: 'auto' }}>
-                                <AlwaysVisTextBox
-                                    initialText={userNotes}
-                                    onSave={(text) => console.log('Notes saved', text)}
-                                />
-                            </Box>
-
-                            {/* Reviews filter */}
-                            <Box sx={{ mt: 2 }}>
-                                <ReviewsFilterBar
-                                    onFilterChange={(filter) => console.log('Filter selected', filter)}
-                                />
-                            </Box>
-
-                            {/* Comments */}
-                            <Box sx={{ mt: 1 }}>
-                                {comments && comments.length > 0 ? (
-                                    comments.map((c, idx) => (
-                                        <Box key={idx} sx={{ mb: 2 }}>
-                                            <GlobalCommentCard
-                                                userName={c.userName}
-                                                userIconProps={{ photoUrl: c.userPhoto }}
-                                                commentText={c.commentText}
-                                            />
-                                        </Box>
-                                    ))
-                                ) : (
-                                    <Box
-                                        sx={{
-                                            color: '#aaa',
-                                            textAlign: 'center',
-                                            mt: 4,
-                                            fontWeight: 600,
-                                            paddingBottom: 5,
-                                        }}
-                                    >
-                                        No reviews yet.
-                                    </Box>
-                                )}
-                            </Box>
-
-                        </>
-                    )}
                 </Box>
 
             </Box>
