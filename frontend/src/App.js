@@ -7,6 +7,9 @@ import Nav from './Components/Nav/nav';
 import Footer from './Components/Footer/Footer';
 import LandingPage from './Pages/LandingPage';
 import Dashboard from './Pages/Dashboard';
+import MoviePage from "./Components/Lists/MoviePage";
+import TvShows from "./Components/Lists/TvShows";
+import PublicLists from "./Components/Lists/PublicLists";
 // import Profile from './Pages/Profile';
 import Register from './Pages/Register';
 import ResetConfirmation from './componentsAC/SignInComponents/ResetConfirmation'
@@ -41,6 +44,9 @@ function App() {
               /> */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/moviedetails" element={<MovieDetails />} />
+              <Route path="/movies" element={<MoviePage />} />
+              <Route path="/tvshows" element={<TvShows />} />
+              <Route path="/publiclists" element={<PublicLists />} />
               {/* <Route path="/profile" element={<Profile />} /> */}
               {/* <Route
                 path="/profile"

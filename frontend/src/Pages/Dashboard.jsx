@@ -41,8 +41,6 @@ const Dashboard = () => {
         <Recommendations />
         <NewReleases />
         <TrendingNow />
-        <YourLists />
-        <CommunityLists />
     </div>
   );
 };

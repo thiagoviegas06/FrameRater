@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import FilmDetailFetcher from "../../componentsAC/MovieDetailComponents/FilmDetailFetcher";
 import "./MovieCard.css";

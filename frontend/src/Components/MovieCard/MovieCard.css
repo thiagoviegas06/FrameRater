@@ -21,6 +21,40 @@
   position: relative;
   overflow: hidden;
 }
+/* Favorite Heart Button */
+.favorite-btn {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    border: none;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.favorite-btn.favorited {
+    background: rgba(255, 0, 70, 0.75);
+}
+
+.favorite-btn.favorited:hover {
+    background: rgba(255, 0, 70, 0.9);
+}
+
 
 .movie-card:hover .movie-poster {
   box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.3),
@@ -128,3 +162,18 @@
     transform: translateY(0);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

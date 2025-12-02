@@ -1,0 +1,7 @@
+.movies-page-container {
+    padding: 3rem 0;
+    background-color: #09090b;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}

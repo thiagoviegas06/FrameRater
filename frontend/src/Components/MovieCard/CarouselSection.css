@@ -1,0 +1,93 @@
+   /* Movie Carousels */
+
+/* Outer section padding & background (optional) */
+.movies-section {
+    padding: 3rem 0;
+    background-color: #09090b; /* matches conversations-section */
+}
+
+/* Carousel container for movie rows */
+.movies-carousel {
+    position: relative;
+    max-width: 70rem;     /* same width as conversations-carousel */
+    margin: 0 auto;
+}
+
+/* Single-row layout for carousel grids */
+.movies-grid.movies-grid--single-row {
+    /* Base desktop/grid behavior */
+    display: grid;
+    grid-template-columns: repeat(6, minmax(140px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Reuse the same carousel-btn styles you already have */
+.movies-carousel .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f4f4f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.movies-carousel .carousel-btn:hover {
+    background-color: rgba(239, 68, 68, 0.9);
+    border-color: #ef4444;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.movies-carousel .carousel-btn-prev {
+    left: 1.5rem;
+}
+
+.movies-carousel .carousel-btn-next {
+    right: 1.5rem;
+}
+
+/* Responsive: match your existing breakpoints */
+@media (max-width: 768px) {
+    .movies-section {
+        padding: 2rem 0;
+    }
+
+    .movies-grid.movies-grid--single-row {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    .movies-carousel .carousel-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .movies-carousel .carousel-btn-prev {
+        left: 0.5rem;
+    }
+
+    .movies-carousel .carousel-btn-next {
+        right: 0.5rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .movies-grid.movies-grid--single-row {
+        grid-template-columns: repeat(4, minmax(140px, 1fr));
+    }
+}
+
+@media (min-width: 1025px) {
+    .movies-grid.movies-grid--single-row {
+        grid-template-columns: repeat(6, minmax(140px, 1fr));
+        margin: 0 6%;
+    }
+}
